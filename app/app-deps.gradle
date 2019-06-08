@@ -14,6 +14,8 @@ dependencies {
     implementation deps.reactive.rxAndroid
     //view model and live data
     implementation deps.google.lifecycle
+    //Room
+    implementation deps.google.room
     //dagger
     implementation deps.google.dagger
     implementation deps.google.daggerAndroidSupport

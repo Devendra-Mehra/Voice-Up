@@ -11,7 +11,9 @@ def versions = [
         'rxandroid'       : '2.1.0',
         'lifecycle'       : '2.0.0',
         'picasso'         : '2.71828',
-        'dagger'          : '2.22.1'
+        'dagger'          : '2.22.1',
+        'room'            : '2.1.0-rc01'
+
 ]
 
 
@@ -41,6 +43,7 @@ def deps = [
         ],
         google  : [
                 'lifecycle'             : "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}",
+                'room'                : "androidx.room:room-runtime:${versions.room}",
                 'dagger'                : "com.google.dagger:dagger:${versions.dagger}",
                 'daggerAndroidSupport'  : "com.google.dagger:dagger-android-support:${versions.dagger}",
                 'daggerProcessor'       : "com.google.dagger:dagger-compiler:${versions.dagger}",
