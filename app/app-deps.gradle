@@ -1,0 +1,22 @@
+dependencies {
+    //support
+    implementation deps.support.appCompat
+    implementation deps.support.material
+    implementation deps.support.cardview
+    implementation deps.support.constraintlayout
+    //square
+    implementation deps.square.picasso
+    //stetho
+    implementation deps.facebook.stetho
+    implementation deps.facebook.stetho_okhttp3
+    //reactive
+    implementation deps.reactive.rxjava
+    implementation deps.reactive.rxAndroid
+    //view model and live data
+    implementation deps.google.lifecycle
+    //dagger
+    implementation deps.google.dagger
+    implementation deps.google.daggerAndroidSupport
+    annotationProcessor deps.google.daggerProcessor
+    annotationProcessor deps.google.daggerAndroidProcessor
+}
