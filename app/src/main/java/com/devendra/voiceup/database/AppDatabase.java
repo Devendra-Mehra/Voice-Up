@@ -9,11 +9,12 @@ import com.devendra.voiceup.database.post.PostDao;
 import com.devendra.voiceup.database.users.UserDao;
 import com.devendra.voiceup.database.users.Users;
 
+
 @Database(entities = {Users.class, Post.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-    public abstract UserDao userDao();
+    public abstract UserDao getUserDao();
 
-    public abstract PostDao postDao();
+    public abstract PostDao getPostDao();
 
 }

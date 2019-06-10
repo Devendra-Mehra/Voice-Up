@@ -27,7 +27,6 @@ public interface ApplicationComponent {
         Builder application(Application application);
 
         ApplicationComponent build();
-
     }
 
     void inject(VoiceUpApplication voiceUpApplication);

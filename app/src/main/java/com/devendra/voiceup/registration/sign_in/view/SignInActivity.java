@@ -1,15 +1,15 @@
-package com.devendra.voiceup.registration.sign_in;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.devendra.voiceup.registration.sign_in.view;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Switch;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.devendra.voiceup.R;
-import com.devendra.voiceup.registration.sign_up.SignUpActivity;
+import com.devendra.voiceup.registration.sign_up.view.SignUpActivity;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
