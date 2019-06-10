@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.devendra.voiceup.app.di.DaggerApplicationComponent;
+import com.devendra.voiceup.uitls.Preferences;
 
 import javax.inject.Inject;
 
@@ -18,6 +19,9 @@ public class VoiceUpApplication extends Application implements HasActivityInject
     @Inject
     DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
 
+    @Inject
+    Preferences preferences;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -26,6 +30,8 @@ public class VoiceUpApplication extends Application implements HasActivityInject
                 .application(this)
                 .build()
                 .inject(this);
+
+        preferences.loadPreferences();
     }
 
     @Override

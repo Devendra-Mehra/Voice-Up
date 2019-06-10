@@ -2,7 +2,8 @@ package com.devendra.voiceup.app.di;
 
 import android.app.Application;
 import android.content.Context;
-import android.provider.SyncStateContract;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import androidx.room.Room;
 
@@ -32,5 +33,10 @@ public class ApplicationModule {
                 "Voice up").build();
     }
 
+    @Provides
+    @Singleton
+    SharedPreferences getPreferences(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
 
 }

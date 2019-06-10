@@ -5,5 +5,15 @@ package com.devendra.voiceup.uitls;
  */
 
 public class Constants {
-    public final static String DATABASE_NAME = "Voice up";
+    private final static String DATABASE_NAME = "Voice up";
+    private final static String LOGGED_IN = "loggedIn";
+
+
+    public static String getDatabaseName() {
+        return DATABASE_NAME;
+    }
+
+    public static String getLoggedIn() {
+        return LOGGED_IN;
+    }
 }
