@@ -1,6 +1,7 @@
 package com.devendra.voiceup.uitls;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -8,13 +9,13 @@ import javax.inject.Inject;
 public class Preferences {
 
     private boolean loggedIn;
+
     private SharedPreferences preferences;
 
     @Inject
     public Preferences(SharedPreferences preferences) {
         this.preferences = preferences;
     }
-
 
     public boolean isLoggedIn() {
         return loggedIn;
@@ -32,6 +33,8 @@ public class Preferences {
 
 
     public void loadPreferences() {
+        Log.d("LOG10", "" + preferences);
+        Log.d("LOG10", "" + loggedIn);
         loggedIn = preferences.getBoolean(Constants.getLoggedIn(), false);
     }
 }

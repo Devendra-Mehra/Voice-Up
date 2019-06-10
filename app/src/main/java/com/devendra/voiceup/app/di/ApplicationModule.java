@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import androidx.room.Room;
 
 import com.devendra.voiceup.database.AppDatabase;
+import com.devendra.voiceup.uitls.Preferences;
 
 import javax.inject.Singleton;
 
@@ -35,8 +36,15 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    SharedPreferences getPreferences(Context context) {
+    SharedPreferences getSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+
+    @Provides
+    @Singleton
+    Preferences getPreferences(SharedPreferences sharedPreferences) {
+        return new Preferences(sharedPreferences);
     }
 
 }
