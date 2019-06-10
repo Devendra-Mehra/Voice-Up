@@ -65,6 +65,7 @@
         android:id="@+id/tv_sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="onClick"
         android:padding="16dp"
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
