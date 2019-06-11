@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.devendra.voiceup.app.di.DaggerApplicationComponent;
-import com.devendra.voiceup.uitls.Preferences;
+import com.devendra.voiceup.utils.Preferences;
 
 import javax.inject.Inject;
 

@@ -16,6 +16,8 @@ dependencies {
     implementation deps.google.lifecycle
     //Room
     implementation deps.google.room
+    implementation deps.google.roomRxjava2
+    annotationProcessor deps.google.roomAnnotationProcessor
     //dagger
     implementation deps.google.dagger
     implementation deps.google.daggerAndroidSupport

@@ -1,4 +1,4 @@
-package com.devendra.voiceup.uitls;
+package com.devendra.voiceup.utils;
 
 /**
  * Created by ADMIN on 21-Mar-17.

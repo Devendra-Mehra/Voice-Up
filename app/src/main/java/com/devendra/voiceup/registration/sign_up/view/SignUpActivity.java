@@ -12,15 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.devendra.voiceup.R;
-import com.devendra.voiceup.uitls.FieldType;
+import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.registration.sign_up.view_model.SignUpViewModel;
 import com.devendra.voiceup.registration.sign_up.view_model.SignUpViewModelFactory;
-import com.devendra.voiceup.uitls.ViewState;
-import com.devendra.voiceup.uitls.custom_exception.FieldException;
-import com.devendra.voiceup.uitls.out_come.Failure;
-import com.devendra.voiceup.uitls.out_come.OutCome;
-import com.devendra.voiceup.uitls.out_come.Progress;
-import com.devendra.voiceup.uitls.out_come.Success;
+import com.devendra.voiceup.utils.ViewState;
+import com.devendra.voiceup.utils.custom_exception.FieldException;
+import com.devendra.voiceup.utils.out_come.Failure;
+import com.devendra.voiceup.utils.out_come.OutCome;
+import com.devendra.voiceup.utils.out_come.Progress;
+import com.devendra.voiceup.utils.out_come.Success;
 
 import javax.inject.Inject;
 

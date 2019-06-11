@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import androidx.room.Room;
 
 import com.devendra.voiceup.database.AppDatabase;
-import com.devendra.voiceup.uitls.Preferences;
+import com.devendra.voiceup.utils.Preferences;
 
 import javax.inject.Singleton;
 
@@ -26,7 +26,6 @@ public class ApplicationModule {
     Context providesContext(Application application) {
         return application;
     }
-/*
 
     @Provides
     @Singleton
@@ -34,7 +33,6 @@ public class ApplicationModule {
         return Room.databaseBuilder(context, AppDatabase.class,
                 "Voice up").build();
     }
-*/
 
 
     @Provides

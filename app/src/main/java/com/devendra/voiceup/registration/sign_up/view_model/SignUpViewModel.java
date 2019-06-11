@@ -1,12 +1,11 @@
 package com.devendra.voiceup.registration.sign_up.view_model;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.devendra.voiceup.database.users.Users;
 import com.devendra.voiceup.registration.sign_up.model.SignUpModel;
-import com.devendra.voiceup.uitls.out_come.OutCome;
+import com.devendra.voiceup.utils.out_come.OutCome;
 
 import javax.inject.Inject;
 

@@ -1,4 +1,4 @@
-package com.devendra.voiceup.uitls;
+package com.devendra.voiceup.utils;
 
 import android.content.SharedPreferences;
 import android.util.Log;

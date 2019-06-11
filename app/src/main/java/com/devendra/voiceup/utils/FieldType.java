@@ -1,4 +1,4 @@
-package com.devendra.voiceup.uitls;
+package com.devendra.voiceup.utils;
 
 /**
  * Created by Devendra Mehra on 6/11/2019.

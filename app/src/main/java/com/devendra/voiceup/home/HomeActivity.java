@@ -4,16 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.devendra.voiceup.R;
-import com.devendra.voiceup.uitls.Preferences;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.devendra.voiceup.utils.Preferences;
 
 import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
 
 public class HomeActivity extends AppCompatActivity {
 

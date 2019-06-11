@@ -4,15 +4,21 @@ import android.util.Patterns;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.database.users.Users;
-import com.devendra.voiceup.uitls.FieldType;
-import com.devendra.voiceup.uitls.custom_exception.FieldException;
-import com.devendra.voiceup.uitls.out_come.Failure;
-import com.devendra.voiceup.uitls.out_come.OutCome;
-import com.devendra.voiceup.uitls.out_come.Progress;
-import com.devendra.voiceup.uitls.out_come.Success;
+import com.devendra.voiceup.utils.FieldType;
+import com.devendra.voiceup.utils.custom_exception.FieldException;
+import com.devendra.voiceup.utils.out_come.Failure;
+import com.devendra.voiceup.utils.out_come.OutCome;
+import com.devendra.voiceup.utils.out_come.Progress;
+import com.devendra.voiceup.utils.out_come.Success;
 
 import javax.inject.Inject;
+
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Devendra Mehra on 6/10/2019.
@@ -20,14 +26,17 @@ import javax.inject.Inject;
 public class SignUpModel {
 
     private MutableLiveData<OutCome> outComeMutableLiveData;
-
+    private AppDatabase appDatabase;
 
     @Inject
-    public SignUpModel(MutableLiveData<OutCome> outComeMutableLiveData) {
+    public SignUpModel(MutableLiveData<OutCome> outComeMutableLiveData,
+                       AppDatabase appDatabase) {
         this.outComeMutableLiveData = outComeMutableLiveData;
+        this.appDatabase = appDatabase;
     }
 
     public void validate(Users users) {
+
         outComeMutableLiveData.setValue(new Progress(true));
         if (users.getUserName().isEmpty()) {
             outComeMutableLiveData.setValue(new Progress(false));
@@ -48,9 +57,7 @@ public class SignUpModel {
             outComeMutableLiveData.setValue(new Failure(
                     new FieldException("password cannot be empty", FieldType.PASSWORD)));
         } else {
-            outComeMutableLiveData.setValue(new Success("Data success"));
-            outComeMutableLiveData.setValue(new Progress(false));
-
+            insertUser(users);
         }
 
     }
@@ -59,4 +66,47 @@ public class SignUpModel {
         return outComeMutableLiveData;
     }
 
+    private void insertUser(Users users) {
+
+        appDatabase.getUserDao()
+                .getUserByUserName(users.getUserName())
+                .map(integer -> {
+                    if (integer <= 0) {
+                        appDatabase.getUserDao().insertUsers(users);
+                        return true;
+                    } else{
+                        return false;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean isSuccessful) {
+                        if (isSuccessful) {
+                            outComeMutableLiveData.setValue(new Progress(false));
+                            outComeMutableLiveData.setValue(new Success("Data inserted successfully"));
+
+                        } else {
+                            outComeMutableLiveData.setValue(new Progress(false));
+                            outComeMutableLiveData.setValue(new Failure(
+                                    new FieldException("Username already exists", FieldType.USERNAME)));
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
+    }
+
 }
+
+

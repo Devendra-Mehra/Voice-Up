@@ -1,4 +1,4 @@
-package com.devendra.voiceup.uitls.out_come;
+package com.devendra.voiceup.utils.out_come;
 
 /**
  * Created by Devendra Mehra on 6/10/2019.

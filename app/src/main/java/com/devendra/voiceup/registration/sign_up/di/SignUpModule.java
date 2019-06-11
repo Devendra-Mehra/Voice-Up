@@ -3,6 +3,7 @@ package com.devendra.voiceup.registration.sign_up.di;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.registration.sign_up.model.SignUpModel;
 import com.devendra.voiceup.registration.sign_up.view_model.SignUpViewModelFactory;
 
@@ -23,10 +24,9 @@ public class SignUpModule {
     }
 
     @Provides
-    SignUpModel providesSignInModel() {
-        return new SignUpModel(new MutableLiveData<>());
+    SignUpModel providesSignInModel(AppDatabase appDatabase) {
+        return new SignUpModel(new MutableLiveData<>(), appDatabase);
     }
-
 
 
 }

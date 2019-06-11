@@ -1,6 +1,6 @@
-package com.devendra.voiceup.uitls.custom_exception;
+package com.devendra.voiceup.utils.custom_exception;
 
-import com.devendra.voiceup.uitls.FieldType;
+import com.devendra.voiceup.utils.FieldType;
 
 /**
  * Created by Devendra Mehra on 6/10/2019.

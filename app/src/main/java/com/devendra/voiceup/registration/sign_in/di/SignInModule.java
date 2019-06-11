@@ -17,14 +17,6 @@ import dagger.Provides;
 public class SignInModule {
 
 
-    @Provides
-    SignUpViewModelFactory providesSignInViewModel(SignUpModel signUpModel) {
-        return new SignUpViewModelFactory(signUpModel);
-    }
 
-    @Provides
-    SignUpModel providesSignInModel() {
-        return new SignUpModel(new MutableLiveData<>());
-    }
 
 }
