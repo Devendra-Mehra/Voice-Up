@@ -1,5 +1,7 @@
 package com.devendra.voiceup.registration.sign_up.model;
 
+import android.util.Patterns;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.users.Users;
@@ -25,14 +27,30 @@ public class SignUpModel {
 
     }
 
-
     public void validate(Users users) {
         outComeMutableLiveData.setValue(new Progress(true));
         if (users.getUserName().isEmpty()) {
-            outComeMutableLiveData.setValue(new Failure(
-                    new EmptyFieldException("Empty field")));
             outComeMutableLiveData.setValue(new Progress(false));
+            outComeMutableLiveData.setValue(new Failure(
+                    new EmptyFieldException("User name filed can not be empty")));
+        } else if (users.getUserEmail().isEmpty()) {
+            outComeMutableLiveData.setValue(new Progress(false));
+            outComeMutableLiveData.setValue(new Failure(
+                    new EmptyFieldException("Email address filed can not be empty")));
 
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(users.getUserEmail()).matches()) {
+            outComeMutableLiveData.setValue(new Progress(false));
+            outComeMutableLiveData.setValue(new Failure(
+                    new EmptyFieldException("Invalid email address")));
+
+        } else if (users.getUserPassword().isEmpty()) {
+            outComeMutableLiveData.setValue(new Progress(false));
+            outComeMutableLiveData.setValue(new Failure(
+                    new EmptyFieldException("Email address filed can not be empty")));
+        } else if (users.getUserPassword().length() < 5) {
+            outComeMutableLiveData.setValue(new Progress(false));
+            outComeMutableLiveData.setValue(new Failure(
+                    new EmptyFieldException("Password filed should be great than 5 character")));
         } else {
             outComeMutableLiveData.setValue(new Success("Data success"));
             outComeMutableLiveData.setValue(new Progress(false));
@@ -44,4 +62,10 @@ public class SignUpModel {
     public MutableLiveData<OutCome> getOutComeMutableLiveData() {
         return outComeMutableLiveData;
     }
+
+    private void setOutComeMutableLiveData(boolean loading, String message) {
+
+    }
+
+
 }

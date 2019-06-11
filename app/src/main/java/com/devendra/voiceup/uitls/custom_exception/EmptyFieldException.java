@@ -8,5 +8,4 @@ public class EmptyFieldException extends Exception {
     public EmptyFieldException(String emptyFieldException) {
         super(emptyFieldException);
     }
-
 }
