@@ -1,4 +1,4 @@
-package com.devendra.voiceup.registration.sign_up.di;
+package com.devendra.voiceup.registration.sign_in.di;
 
 
 import androidx.lifecycle.MutableLiveData;
@@ -14,7 +14,7 @@ import dagger.Provides;
  */
 
 @Module
-public class SignUpModule {
+public class SignInModule {
 
 
     @Provides
@@ -26,7 +26,5 @@ public class SignUpModule {
     SignUpModel providesSignInModel() {
         return new SignUpModel(new MutableLiveData<>());
     }
-
-
 
 }

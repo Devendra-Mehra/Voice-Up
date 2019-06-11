@@ -3,7 +3,6 @@ package com.devendra.voiceup.registration.sign_up.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -13,9 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.devendra.voiceup.R;
+import com.devendra.voiceup.uitls.FieldType;
 import com.devendra.voiceup.registration.sign_up.view_model.SignUpViewModel;
 import com.devendra.voiceup.registration.sign_up.view_model.SignUpViewModelFactory;
-import com.devendra.voiceup.uitls.custom_exception.EmptyFieldException;
+import com.devendra.voiceup.uitls.ViewState;
+import com.devendra.voiceup.uitls.custom_exception.FieldException;
 import com.devendra.voiceup.uitls.out_come.Failure;
 import com.devendra.voiceup.uitls.out_come.OutCome;
 import com.devendra.voiceup.uitls.out_come.Progress;
@@ -35,7 +36,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     SignUpViewModel signUpViewModel;
 
-    private enum ViewStatus {LOADING, SUCCESS, ERROR}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +49,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         signUpViewModel.getOutComeMutableLiveData().observe(this, outCome -> {
             if (outCome instanceof Progress) {
-                changeViewState(ViewStatus.LOADING, outCome);
+                changeViewState(ViewState.LOADING, outCome);
             } else if (outCome instanceof Success) {
-                changeViewState(ViewStatus.SUCCESS, outCome);
+                changeViewState(ViewState.SUCCESS, outCome);
             } else {
-                changeViewState(ViewStatus.ERROR, outCome);
+                changeViewState(ViewState.ERROR, outCome);
             }
         });
 
@@ -66,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         progressBarLoading = findViewById(R.id.progress_bar_loading);
     }
 
-    private void changeViewState(ViewStatus viewStatus, OutCome outCome) {
+    private void changeViewState(ViewState viewStatus, OutCome outCome) {
         switch (viewStatus) {
             case SUCCESS:
                 Success success = (Success) outCome;
@@ -80,8 +80,21 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             default:
                 Failure failure = (Failure) outCome;
-                if (failure.getException() instanceof EmptyFieldException) {
-                    Log.d("Log10", "" + failure.getException().getMessage());
+                if (failure.getThrowable() instanceof FieldException) {
+                    FieldException fieldException = (FieldException) failure.getThrowable();
+                    String errorMessage = fieldException.getMessage();
+                    FieldType fieldType = fieldException.getFieldType();
+                    switch (fieldType) {
+                        case EMAIL:
+                            etEmail.setError(errorMessage);
+                            break;
+                        case USERNAME:
+                            etUserName.setError(errorMessage);
+                            break;
+                        case PASSWORD:
+                            etPassword.setError(errorMessage);
+                            break;
+                    }
                 }
 
 

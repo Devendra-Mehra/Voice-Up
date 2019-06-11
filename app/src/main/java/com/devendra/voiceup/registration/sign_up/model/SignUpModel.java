@@ -5,7 +5,8 @@ import android.util.Patterns;
 import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.users.Users;
-import com.devendra.voiceup.uitls.custom_exception.EmptyFieldException;
+import com.devendra.voiceup.uitls.FieldType;
+import com.devendra.voiceup.uitls.custom_exception.FieldException;
 import com.devendra.voiceup.uitls.out_come.Failure;
 import com.devendra.voiceup.uitls.out_come.OutCome;
 import com.devendra.voiceup.uitls.out_come.Progress;
@@ -24,7 +25,6 @@ public class SignUpModel {
     @Inject
     public SignUpModel(MutableLiveData<OutCome> outComeMutableLiveData) {
         this.outComeMutableLiveData = outComeMutableLiveData;
-
     }
 
     public void validate(Users users) {
@@ -32,25 +32,21 @@ public class SignUpModel {
         if (users.getUserName().isEmpty()) {
             outComeMutableLiveData.setValue(new Progress(false));
             outComeMutableLiveData.setValue(new Failure(
-                    new EmptyFieldException("User name filed can not be empty")));
+                    new FieldException("User name cannot be empty", FieldType.USERNAME)));
         } else if (users.getUserEmail().isEmpty()) {
             outComeMutableLiveData.setValue(new Progress(false));
             outComeMutableLiveData.setValue(new Failure(
-                    new EmptyFieldException("Email address filed can not be empty")));
+                    new FieldException("Email cannot be empty", FieldType.EMAIL)));
 
         } else if (!Patterns.EMAIL_ADDRESS.matcher(users.getUserEmail()).matches()) {
             outComeMutableLiveData.setValue(new Progress(false));
             outComeMutableLiveData.setValue(new Failure(
-                    new EmptyFieldException("Invalid email address")));
+                    new FieldException("Invalid email address", FieldType.EMAIL)));
 
         } else if (users.getUserPassword().isEmpty()) {
             outComeMutableLiveData.setValue(new Progress(false));
             outComeMutableLiveData.setValue(new Failure(
-                    new EmptyFieldException("Email address filed can not be empty")));
-        } else if (users.getUserPassword().length() < 5) {
-            outComeMutableLiveData.setValue(new Progress(false));
-            outComeMutableLiveData.setValue(new Failure(
-                    new EmptyFieldException("Password filed should be great than 5 character")));
+                    new FieldException("password cannot be empty", FieldType.PASSWORD)));
         } else {
             outComeMutableLiveData.setValue(new Success("Data success"));
             outComeMutableLiveData.setValue(new Progress(false));
@@ -62,10 +58,5 @@ public class SignUpModel {
     public MutableLiveData<OutCome> getOutComeMutableLiveData() {
         return outComeMutableLiveData;
     }
-
-    private void setOutComeMutableLiveData(boolean loading, String message) {
-
-    }
-
 
 }

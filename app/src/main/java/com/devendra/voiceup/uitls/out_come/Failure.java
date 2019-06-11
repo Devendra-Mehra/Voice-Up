@@ -5,13 +5,13 @@ package com.devendra.voiceup.uitls.out_come;
  */
 
 public class Failure implements OutCome {
-    private Exception exception;
+    private Throwable throwable;
 
-    public Failure(Exception exception) {
-        this.exception = exception;
+    public Failure(Throwable throwable) {
+        this.throwable = throwable;
     }
 
-    public Exception getException() {
-        return exception;
+    public Throwable getThrowable() {
+        return throwable;
     }
 }
