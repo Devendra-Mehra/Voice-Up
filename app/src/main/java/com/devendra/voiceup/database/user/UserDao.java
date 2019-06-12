@@ -22,5 +22,5 @@ public interface UserDao {
     Single<User> getUserByEmail(String email);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertUser(User user);
+    long insertUser(User user);
 }

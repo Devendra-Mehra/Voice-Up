@@ -34,7 +34,7 @@ public class SplashScreenModel {
         handler.postDelayed(() ->
                         booleanMutableLiveData
                                 .setValue(preferences.isLoggedIn()),
-                2000);
+                1000);
     }
 
 }

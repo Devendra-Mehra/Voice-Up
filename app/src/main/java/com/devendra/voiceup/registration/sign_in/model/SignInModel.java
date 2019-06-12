@@ -69,7 +69,6 @@ public class SignInModel {
 
                         @Override
                         public void onSuccess(User user) {
-                            Log.d("Log12", "onSuccess " + user);
                             if (user == null) {
                                 outComeMutableLiveData.setValue(new Progress(false));
                                 outComeMutableLiveData.setValue(new Failure(
@@ -78,8 +77,9 @@ public class SignInModel {
                             } else {
                                 if (user.getUserPassword().equals(password)) {
                                     outComeMutableLiveData.setValue(new Progress(false));
-                                    outComeMutableLiveData.setValue(new Success("User found successfully"));
+                                    outComeMutableLiveData.setValue(new Success("Login in successfully"));
                                     preferences.setLoggedIn(true);
+                                    preferences.setUserId(user.getUserId());
                                 } else {
                                     outComeMutableLiveData.setValue(new Progress(false));
                                     outComeMutableLiveData.setValue(new Failure(
@@ -91,7 +91,6 @@ public class SignInModel {
 
                         @Override
                         public void onError(Throwable e) {
-                            Log.d("Log12", "onError " + e.getMessage());
                             outComeMutableLiveData.setValue(new Progress(false));
                             outComeMutableLiveData.setValue(new Failure(
                                     new FieldException("No user found for this record", FieldType.GENERAL)));

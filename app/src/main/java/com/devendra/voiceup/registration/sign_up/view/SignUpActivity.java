@@ -12,9 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.devendra.voiceup.R;
-import com.devendra.voiceup.utils.FieldType;
+import com.devendra.voiceup.home.view.HomeActivity;
 import com.devendra.voiceup.registration.sign_up.view_model.SignUpViewModel;
 import com.devendra.voiceup.registration.sign_up.view_model.SignUpViewModelFactory;
+import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.utils.ViewState;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
 import com.devendra.voiceup.utils.out_come.Failure;
@@ -72,6 +73,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 Success success = (Success) outCome;
                 Toast.makeText(this, success.getSuccess(),
                         Toast.LENGTH_SHORT).show();
+                startActivity(HomeActivity.requiredIntent(this));
+                finish();
                 break;
             case LOADING:
                 Progress progress = (Progress) outCome;

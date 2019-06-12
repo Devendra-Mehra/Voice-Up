@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.devendra.voiceup.R;
-import com.devendra.voiceup.registration.sign_in.di.SignInModule;
+import com.devendra.voiceup.home.view.HomeActivity;
 import com.devendra.voiceup.registration.sign_in.view_model.SignInViewModel;
 import com.devendra.voiceup.registration.sign_in.view_model.SignInViewModelFactory;
 import com.devendra.voiceup.registration.sign_up.view.SignUpActivity;
@@ -75,6 +75,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         int id = v.getId();
         if (id == R.id.tv_sign_up) {
             startActivity(SignUpActivity.requiredIntent(this));
+            finish();
         } else if (id == R.id.fab_login) {
             etEmailAddress.setError(null);
             etPassword.setError(null);
@@ -90,7 +91,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             case SUCCESS:
                 Success success = (Success) outCome;
                 Toast.makeText(this, success.getSuccess(),
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
+                startActivity(HomeActivity.requiredIntent(this));
+                finish();
                 break;
             case LOADING:
                 Progress progress = (Progress) outCome;
@@ -122,6 +125,5 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public static Intent requiredIntent(Context context) {
         return new Intent(context, SignInActivity.class);
     }
-
 
 }

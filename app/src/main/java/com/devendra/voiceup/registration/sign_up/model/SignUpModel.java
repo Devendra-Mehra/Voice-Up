@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.database.user.User;
 import com.devendra.voiceup.utils.FieldType;
+import com.devendra.voiceup.utils.Preferences;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
@@ -27,12 +28,14 @@ public class SignUpModel {
 
     private MutableLiveData<OutCome> outComeMutableLiveData;
     private AppDatabase appDatabase;
+    private Preferences preferences;
 
     @Inject
     public SignUpModel(MutableLiveData<OutCome> outComeMutableLiveData,
-                       AppDatabase appDatabase) {
+                       AppDatabase appDatabase, Preferences preferences) {
         this.outComeMutableLiveData = outComeMutableLiveData;
         this.appDatabase = appDatabase;
+        this.preferences = preferences;
     }
 
     public void validate(User user) {
@@ -72,7 +75,7 @@ public class SignUpModel {
                 .getUserByUserName(user.getUserName())
                 .map(integer -> {
                     if (integer <= 0) {
-                        appDatabase.getUserDao().insertUser(user);
+                        preferences.setUserId(appDatabase.getUserDao().insertUser(user));
                         return true;
                     } else {
                         return false;

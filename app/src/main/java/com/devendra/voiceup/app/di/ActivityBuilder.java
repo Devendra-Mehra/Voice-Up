@@ -4,6 +4,8 @@ package com.devendra.voiceup.app.di;
  * Created by Devendra Mehra on 5/6/2019.
  */
 
+import com.devendra.voiceup.home.di.HomeModule;
+import com.devendra.voiceup.home.view.HomeActivity;
 import com.devendra.voiceup.registration.sign_in.di.SignInModule;
 import com.devendra.voiceup.registration.sign_in.view.SignInActivity;
 import com.devendra.voiceup.registration.sign_up.di.SignUpModule;
@@ -27,4 +29,6 @@ public abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = SplashScreenModule.class)
     abstract SplashScreenActivity contributeSplashScreenActivityInjector();
 
+    @ContributesAndroidInjector(modules = HomeModule.class)
+    abstract HomeActivity contributeHomeActivityInjector();
 }
