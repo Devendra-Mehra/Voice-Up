@@ -8,6 +8,8 @@ import com.devendra.voiceup.registration.sign_in.di.SignInModule;
 import com.devendra.voiceup.registration.sign_in.view.SignInActivity;
 import com.devendra.voiceup.registration.sign_up.di.SignUpModule;
 import com.devendra.voiceup.registration.sign_up.view.SignUpActivity;
+import com.devendra.voiceup.splash_screen.di.SplashScreenModule;
+import com.devendra.voiceup.splash_screen.view.SplashScreenActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -20,5 +22,9 @@ public abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = SignInModule.class)
     abstract SignInActivity contributeSignInActivityInjector();
+
+
+    @ContributesAndroidInjector(modules = SplashScreenModule.class)
+    abstract SplashScreenActivity contributeSplashScreenActivityInjector();
 
 }

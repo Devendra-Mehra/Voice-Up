@@ -1,5 +1,7 @@
 package com.devendra.voiceup.registration.sign_in.view;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.devendra.voiceup.R;
+import com.devendra.voiceup.registration.sign_in.di.SignInModule;
 import com.devendra.voiceup.registration.sign_in.view_model.SignInViewModel;
 import com.devendra.voiceup.registration.sign_in.view_model.SignInViewModelFactory;
 import com.devendra.voiceup.registration.sign_up.view.SignUpActivity;
@@ -113,9 +116,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                             break;
                     }
                 }
-
-
         }
     }
+
+    public static Intent requiredIntent(Context context) {
+        return new Intent(context, SignInActivity.class);
+    }
+
 
 }
