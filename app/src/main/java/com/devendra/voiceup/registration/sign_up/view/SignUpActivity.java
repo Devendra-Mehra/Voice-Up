@@ -70,8 +70,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void changeViewState(ViewState viewStatus, OutCome outCome) {
         switch (viewStatus) {
             case SUCCESS:
-                Success success = (Success) outCome;
-                Toast.makeText(this, success.getSuccess(),
+                Success<String> success = (Success) outCome;
+                Toast.makeText(this, success.getData(),
                         Toast.LENGTH_SHORT).show();
                 startActivity(HomeActivity.requiredIntent(this));
                 finish();

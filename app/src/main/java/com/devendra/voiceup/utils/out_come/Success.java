@@ -3,18 +3,18 @@ package com.devendra.voiceup.utils.out_come;
 /**
  * Created by Devendra Mehra on 6/10/2019.
  */
-public class Success implements OutCome {
-    private String success;
+public class Success<T> implements OutCome {
+    private T data;
 
-    public Success(String success) {
-        this.success = success;
+    public Success(T data) {
+        this.data = data;
     }
 
-    public String getSuccess() {
-        return success;
+    public T getData() {
+        return data;
     }
 
-    public void setSuccess(String success) {
-        this.success = success;
+    public void setData(T data) {
+        this.data = data;
     }
 }

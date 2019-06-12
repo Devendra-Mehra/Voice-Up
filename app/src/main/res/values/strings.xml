@@ -6,4 +6,5 @@
     <string name="sign_up">Sign Up</string>
     <string name="welcome_to_voice_up">Welcome to Voice Up</string>
     <string name="logout">Logout</string>
+    <string name="no_post">No post available for now</string>
 </resources>

@@ -93,7 +93,7 @@ public class SignUpModel {
                     public void onSuccess(Boolean isSuccessful) {
                         if (isSuccessful) {
                             outComeMutableLiveData.setValue(new Progress(false));
-                            outComeMutableLiveData.setValue(new Success("Data inserted successfully"));
+                            outComeMutableLiveData.setValue(new Success<>("Data inserted successfully"));
 
                         } else {
                             outComeMutableLiveData.setValue(new Progress(false));

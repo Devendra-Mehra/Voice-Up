@@ -77,7 +77,7 @@ public class SignInModel {
                             } else {
                                 if (user.getUserPassword().equals(password)) {
                                     outComeMutableLiveData.setValue(new Progress(false));
-                                    outComeMutableLiveData.setValue(new Success("Login in successfully"));
+                                    outComeMutableLiveData.setValue(new Success<>("Login successfully"));
                                     preferences.setLoggedIn(true);
                                     preferences.setUserId(user.getUserId());
                                 } else {
