@@ -11,10 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".registration.sign_up.view.SignUpActivity"
-            android:theme="@style/AppThemeNoActionBar" />
-        <activity
-            android:name=".registration.sign_in.view.SignInActivity"
+            android:name=".splash_screen.SplashScreenActivity"
             android:theme="@style/AppThemeNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".registration.sign_up.view.SignUpActivity"
+            android:theme="@style/AppThemeNoActionBar" />
+        <activity
+            android:name=".registration.sign_in.view.SignInActivity"
+            android:theme="@style/AppThemeNoActionBar" />
         <activity android:name=".home.HomeActivity" />
         <activity android:name=".post.PostActivity" />
     </application>

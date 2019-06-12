@@ -3,8 +3,10 @@ package com.devendra.voiceup.app;
 import android.app.Activity;
 import android.app.Application;
 
+import com.devendra.voiceup.BuildConfig;
 import com.devendra.voiceup.app.di.DaggerApplicationComponent;
 import com.devendra.voiceup.utils.Preferences;
+import com.facebook.stetho.Stetho;
 
 import javax.inject.Inject;
 
@@ -32,6 +34,10 @@ public class VoiceUpApplication extends Application implements HasActivityInject
                 .inject(this);
 
         preferences.loadPreferences();
+
+        if (BuildConfig.DEBUG) {
+            Stetho.initializeWithDefaults(this);
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.registration.sign_in.model.SignInModel;
 import com.devendra.voiceup.registration.sign_in.view_model.SignInViewModelFactory;
+import com.devendra.voiceup.utils.Preferences;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,7 +23,7 @@ public class SignInModule {
     }
 
     @Provides
-    SignInModel providesSignInModel(AppDatabase appDatabase) {
-        return new SignInModel(new MutableLiveData<>(), appDatabase);
+    SignInModel providesSignInModel(AppDatabase appDatabase, Preferences preferences) {
+        return new SignInModel(new MutableLiveData<>(), appDatabase, preferences);
     }
 }
