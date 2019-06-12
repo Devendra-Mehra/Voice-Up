@@ -8,13 +8,24 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.devendra.voiceup.R;
+import com.devendra.voiceup.home.view_model.HomeViewModel;
+import com.devendra.voiceup.home.view_model.HomeViewModelFactory;
 import com.devendra.voiceup.post.PostActivity;
+import com.devendra.voiceup.registration.sign_in.view.SignInActivity;
+
+import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+
+
+    @Inject
+    HomeViewModelFactory homeViewModelFactory;
+    private HomeViewModel homeViewModel;
 
 
     @Override
@@ -23,6 +34,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        homeViewModel = ViewModelProviders.of(this, homeViewModelFactory)
+                .get(HomeViewModel.class);
+
+        homeViewModel.getLogOutLiveData().observe(this, logout -> {
+            if (logout) {
+                startActivity(SignInActivity.requiredIntent(this));
+                finish();
+            }
+        });
 
     }
 
@@ -48,7 +68,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
-
+            homeViewModel.logout();
         }
         return super.onOptionsItemSelected(item);
     }

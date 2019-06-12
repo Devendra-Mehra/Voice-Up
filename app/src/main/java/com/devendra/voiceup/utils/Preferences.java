@@ -35,7 +35,7 @@ public class Preferences {
         preferences.edit().putLong(Constants.getUserId(), userId).apply();
     }
 
-    private void clearPrefs() {
+    public void clearPrefs() {
         preferences.edit().clear().apply();
         loadPreferences();
     }

@@ -28,6 +28,4 @@ public class SignUpModule {
     SignUpModel providesSignUpModel(AppDatabase appDatabase, Preferences preferences) {
         return new SignUpModel(new MutableLiveData<>(), appDatabase, preferences);
     }
-
-
 }

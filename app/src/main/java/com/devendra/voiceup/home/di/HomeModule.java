@@ -1,7 +1,10 @@
 package com.devendra.voiceup.home.di;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.devendra.voiceup.home.model.HomeModel;
 import com.devendra.voiceup.home.view_model.HomeViewModelFactory;
+import com.devendra.voiceup.utils.Preferences;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,12 +16,12 @@ import dagger.Provides;
 public class HomeModule {
 
     @Provides
-    HomeViewModelFactory providesHomeViewModellFactory(HomeModel homeModel) {
+    HomeViewModelFactory providesHomeViewModelFactory(HomeModel homeModel) {
         return new HomeViewModelFactory(homeModel);
     }
 
     @Provides
-    HomeModel providesHomeModel() {
-        return new HomeModel();
+    HomeModel providesHomeModel(Preferences preferences) {
+        return new HomeModel(preferences, new MutableLiveData<>());
     }
 }
