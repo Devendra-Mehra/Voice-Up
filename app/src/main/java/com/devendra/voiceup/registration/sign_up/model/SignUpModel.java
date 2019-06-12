@@ -5,7 +5,7 @@ import android.util.Patterns;
 import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.AppDatabase;
-import com.devendra.voiceup.database.users.Users;
+import com.devendra.voiceup.database.user.User;
 import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
 import com.devendra.voiceup.utils.out_come.Failure;
@@ -35,29 +35,29 @@ public class SignUpModel {
         this.appDatabase = appDatabase;
     }
 
-    public void validate(Users users) {
+    public void validate(User user) {
 
         outComeMutableLiveData.setValue(new Progress(true));
-        if (users.getUserName().isEmpty()) {
+        if (user.getUserName().isEmpty()) {
             outComeMutableLiveData.setValue(new Progress(false));
             outComeMutableLiveData.setValue(new Failure(
                     new FieldException("User name cannot be empty", FieldType.USERNAME)));
-        } else if (users.getUserEmail().isEmpty()) {
+        } else if (user.getUserEmail().isEmpty()) {
             outComeMutableLiveData.setValue(new Progress(false));
             outComeMutableLiveData.setValue(new Failure(
                     new FieldException("Email cannot be empty", FieldType.EMAIL)));
 
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(users.getUserEmail()).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(user.getUserEmail()).matches()) {
             outComeMutableLiveData.setValue(new Progress(false));
             outComeMutableLiveData.setValue(new Failure(
                     new FieldException("Invalid email address", FieldType.EMAIL)));
 
-        } else if (users.getUserPassword().isEmpty()) {
+        } else if (user.getUserPassword().isEmpty()) {
             outComeMutableLiveData.setValue(new Progress(false));
             outComeMutableLiveData.setValue(new Failure(
                     new FieldException("password cannot be empty", FieldType.PASSWORD)));
         } else {
-            insertUser(users);
+            insertUser(user);
         }
 
     }
@@ -66,15 +66,15 @@ public class SignUpModel {
         return outComeMutableLiveData;
     }
 
-    private void insertUser(Users users) {
+    private void insertUser(User user) {
 
         appDatabase.getUserDao()
-                .getUserByUserName(users.getUserName())
+                .getUserByUserName(user.getUserName())
                 .map(integer -> {
                     if (integer <= 0) {
-                        appDatabase.getUserDao().insertUsers(users);
+                        appDatabase.getUserDao().insertUser(user);
                         return true;
-                    } else{
+                    } else {
                         return false;
                     }
                 })
@@ -101,6 +101,9 @@ public class SignUpModel {
 
                     @Override
                     public void onError(Throwable e) {
+                        outComeMutableLiveData.setValue(new Progress(false));
+                        outComeMutableLiveData.setValue(new Failure(
+                                new FieldException(e.getMessage(), FieldType.GENERAL)));
 
                     }
                 });

@@ -3,7 +3,7 @@ package com.devendra.voiceup.registration.sign_up.view_model;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.devendra.voiceup.database.users.Users;
+import com.devendra.voiceup.database.user.User;
 import com.devendra.voiceup.registration.sign_up.model.SignUpModel;
 import com.devendra.voiceup.utils.out_come.OutCome;
 
@@ -26,7 +26,7 @@ public class SignUpViewModel extends ViewModel {
 
 
     public void validate(String userName, String emailAddress, String password) {
-        Users user = new Users();
+        User user = new User();
         user.setUserName(userName);
         user.setUserEmail(emailAddress);
         user.setUserPassword(password);

@@ -1,4 +1,4 @@
-package com.devendra.voiceup.database.users;
+package com.devendra.voiceup.database.user;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -16,12 +16,16 @@ import io.reactivex.Single;
 @Dao
 public interface UserDao {
 
-    @Query("SELECT * FROM Users")
-    LiveData<List<Users>> getAllUsers();
+    @Query("SELECT * FROM User")
+    LiveData<List<User>> getAllUsers();
 
-    @Query("SELECT COUNT(user_name) FROM Users WHERE user_name = :userName")
+    @Query("SELECT COUNT(user_name) FROM User WHERE user_name = :userName")
     Single<Integer> getUserByUserName(String userName);
 
+
+    @Query("SELECT * FROM User WHERE user_name = :email AND user_password=:password")
+    Single<User> getUserByCredentials(String email, String password);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertUsers(Users users);
+    void insertUser(User user);
 }

@@ -1,4 +1,4 @@
-package com.devendra.voiceup.database.users;
+package com.devendra.voiceup.database.user;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
  * Created by Devendra Mehra on 6/8/2019.
  */
 @Entity
-public class Users {
+public class User {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "user_id")

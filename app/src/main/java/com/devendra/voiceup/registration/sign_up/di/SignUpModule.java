@@ -19,12 +19,12 @@ public class SignUpModule {
 
 
     @Provides
-    SignUpViewModelFactory providesSignInViewModel(SignUpModel signUpModel) {
+    SignUpViewModelFactory providesSignUpViewModel(SignUpModel signUpModel) {
         return new SignUpViewModelFactory(signUpModel);
     }
 
     @Provides
-    SignUpModel providesSignInModel(AppDatabase appDatabase) {
+    SignUpModel providesSignUpModel(AppDatabase appDatabase) {
         return new SignUpModel(new MutableLiveData<>(), appDatabase);
     }
 

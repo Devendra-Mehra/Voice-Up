@@ -94,6 +94,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         case PASSWORD:
                             etPassword.setError(errorMessage);
                             break;
+                        case GENERAL:
+                            Toast.makeText(this, errorMessage,
+                                    Toast.LENGTH_LONG).show();
+                            break;
                     }
                 }
 
@@ -109,10 +113,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.fab_sign_up) {
+            etUserName.setError(null);
+            etEmail.setError(null);
+            etPassword.setError(null);
             String userName = etUserName.getText().toString().trim();
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
             signUpViewModel.validate(userName, email, password);
+        } else if (id == R.id.aciv_back) {
+            finish();
         }
     }
 
