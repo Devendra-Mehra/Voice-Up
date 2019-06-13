@@ -10,5 +10,7 @@ public class Constants {
     public final static String USER_ID = "userId";
     public final static int PHOTO = 0;
     public final static int VIDEO = 1;
+    public static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 1;
+
 
 }

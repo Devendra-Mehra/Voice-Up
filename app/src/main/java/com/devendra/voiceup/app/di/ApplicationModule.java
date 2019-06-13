@@ -48,4 +48,5 @@ public class ApplicationModule {
         return new Preferences(sharedPreferences);
     }
 
+
 }
