@@ -7,4 +7,7 @@
     <string name="welcome_to_voice_up">Welcome to Voice Up</string>
     <string name="logout">Logout</string>
     <string name="no_post">No post available for now</string>
+    <string name="profile_image_of_creator">Profile image of creator</string>
+    <string name="post_image">Post image</string>
+    <string name="something_went_wrong_with_media">Something went wrong with media</string>
 </resources>

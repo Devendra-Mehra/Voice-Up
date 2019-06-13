@@ -75,8 +75,7 @@ public class HomeModel {
 
                     @Override
                     public void onSuccess(List<DisplayablePost> displayablePosts) {
-                        Log.d("Log10", "onSuccess : " + displayablePosts);
-                        outComeMutableLiveData.setValue(new Progress(false));
+                         outComeMutableLiveData.setValue(new Progress(false));
                         if (displayablePosts.size() > 0) {
                             outComeMutableLiveData.setValue(new Success<>(displayablePosts));
                         } else {

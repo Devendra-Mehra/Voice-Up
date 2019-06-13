@@ -23,7 +23,7 @@ public class Preferences {
 
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
-        preferences.edit().putBoolean(Constants.getLoggedIn(), loggedIn).apply();
+        preferences.edit().putBoolean(Constants.LOGGED_IN, loggedIn).apply();
     }
 
     public long getUserId() {
@@ -32,7 +32,7 @@ public class Preferences {
 
     public void setUserId(long userId) {
         this.userId = userId;
-        preferences.edit().putLong(Constants.getUserId(), userId).apply();
+        preferences.edit().putLong(Constants.USER_ID, userId).apply();
     }
 
     public void clearPrefs() {
@@ -42,7 +42,7 @@ public class Preferences {
 
 
     public void loadPreferences() {
-        loggedIn = preferences.getBoolean(Constants.getLoggedIn(), false);
-        userId = preferences.getLong(Constants.getUserId(), -1);
+        loggedIn = preferences.getBoolean(Constants.LOGGED_IN, false);
+        userId = preferences.getLong(Constants.USER_ID, -1);
     }
 }

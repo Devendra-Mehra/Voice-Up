@@ -1,5 +1,8 @@
 package com.devendra.voiceup.home.di;
 
+import android.app.Application;
+import android.widget.MediaController;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.AppDatabase;
@@ -31,7 +34,12 @@ public class HomeModule {
     }
 
     @Provides
-    HomeAdapter provideHomeAdapter() {
-        return new HomeAdapter(new ArrayList<>());
+    HomeAdapter provideHomeAdapter(MediaController mediaController) {
+        return new HomeAdapter(new ArrayList<>(), mediaController);
+    }
+
+    @Provides
+    MediaController provideMediaController(Application application) {
+        return new MediaController(application);
     }
 }

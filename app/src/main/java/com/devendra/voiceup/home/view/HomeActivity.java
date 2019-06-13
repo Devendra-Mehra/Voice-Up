@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -122,6 +121,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 Success<List<DisplayablePost>> success = (Success<List<DisplayablePost>>) outCome;
                 homeAdapter.addPosts(success.getData());
                 recyclerViewPost.setVisibility(View.VISIBLE);
+                textViewNoPost.setVisibility(View.GONE);
+                appCompatImageViewNoPost.setVisibility(View.GONE);
                 break;
             case LOADING:
                 Progress progress = (Progress) outCome;
@@ -131,9 +132,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 Failure failure = (Failure) outCome;
                 if (failure.getThrowable() instanceof FieldException) {
-                    FieldException fieldException = (FieldException) failure.getThrowable();
+                   /* FieldException fieldException = (FieldException) failure.getThrowable();
                     String errorMessage = fieldException.getMessage();
-                    FieldType fieldType = fieldException.getFieldType();
+                    FieldType fieldType = fieldException.getFieldType();*/
+                    recyclerViewPost.setVisibility(View.GONE);
+                    textViewNoPost.setVisibility(View.VISIBLE);
+                    appCompatImageViewNoPost.setVisibility(View.VISIBLE);
 
                 }
 

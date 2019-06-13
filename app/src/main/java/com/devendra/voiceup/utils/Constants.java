@@ -5,20 +5,10 @@ package com.devendra.voiceup.utils;
  */
 
 public class Constants {
-    private final static String DATABASE_NAME = "Voice up";
-    private final static String LOGGED_IN = "loggedIn";
-    private final static String USER_ID = "userId";
+    public final static String DATABASE_NAME = "Voice up";
+    public final static String LOGGED_IN = "loggedIn";
+    public final static String USER_ID = "userId";
+    public final static int PHOTO = 0;
+    public final static int VIDEO = 1;
 
-
-    public static String getDatabaseName() {
-        return DATABASE_NAME;
-    }
-
-    public static String getLoggedIn() {
-        return LOGGED_IN;
-    }
-
-    public static String getUserId() {
-        return USER_ID;
-    }
 }
