@@ -6,6 +6,8 @@ package com.devendra.voiceup.app.di;
 
 import com.devendra.voiceup.home.di.HomeModule;
 import com.devendra.voiceup.home.view.HomeActivity;
+import com.devendra.voiceup.post.view.PostActivity;
+import com.devendra.voiceup.post.di.PostModule;
 import com.devendra.voiceup.registration.sign_in.di.SignInModule;
 import com.devendra.voiceup.registration.sign_in.view.SignInActivity;
 import com.devendra.voiceup.registration.sign_up.di.SignUpModule;
@@ -31,4 +33,7 @@ public abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = HomeModule.class)
     abstract HomeActivity contributeHomeActivityInjector();
+
+    @ContributesAndroidInjector(modules = PostModule.class)
+    abstract PostActivity contributePostActivityInjector();
 }

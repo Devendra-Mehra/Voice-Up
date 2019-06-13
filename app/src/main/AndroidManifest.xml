@@ -26,7 +26,9 @@
             android:name=".registration.sign_in.view.SignInActivity"
             android:theme="@style/AppThemeNoActionBar" />
         <activity android:name=".home.view.HomeActivity" />
-        <activity android:name=".post.PostActivity" />
+        <activity
+            android:name=".post.view.PostActivity"
+            android:parentActivityName=".home.view.HomeActivity" />
     </application>
 
 </manifest>
