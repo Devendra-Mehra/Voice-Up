@@ -10,4 +10,9 @@
     <string name="profile_image_of_creator">Profile image of creator</string>
     <string name="post_image">Post image</string>
     <string name="something_went_wrong_with_media">Something went wrong with media</string>
+    <string name="add_title">Add Title</string>
+    <string name="enter_your_title_here">Enter your title here</string>
+    <string name="add_your_image_or_video">Add Your image or video</string>
+    <string name="re_add_media">Re Add Media</string>
+    <string name="create_your_post">Create your post</string>
 </resources>

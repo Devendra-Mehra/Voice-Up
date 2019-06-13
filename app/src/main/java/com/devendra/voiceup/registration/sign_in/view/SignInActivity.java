@@ -75,7 +75,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         int id = v.getId();
         if (id == R.id.tv_sign_up) {
             startActivity(SignUpActivity.requiredIntent(this));
-            finish();
         } else if (id == R.id.fab_login) {
             etEmailAddress.setError(null);
             etPassword.setError(null);
