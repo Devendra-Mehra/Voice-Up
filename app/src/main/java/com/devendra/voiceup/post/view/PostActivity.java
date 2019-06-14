@@ -9,10 +9,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,35 +19,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devendra.voiceup.R;
-import com.devendra.voiceup.home.view.DisplayablePost;
 import com.devendra.voiceup.post.view_model.PostViewModel;
 import com.devendra.voiceup.post.view_model.PostViewModelFactory;
 import com.devendra.voiceup.utils.Constants;
-import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.utils.ViewState;
-import com.devendra.voiceup.utils.custom_exception.FieldException;
 import com.devendra.voiceup.utils.custom_exception.ImageException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
-import com.devendra.voiceup.utils.out_come.Progress;
 import com.devendra.voiceup.utils.out_come.Success;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 
+import static com.devendra.voiceup.utils.Constants.PHOTO;
+import static com.devendra.voiceup.utils.Constants.VIDEO;
+
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Inject
     PostViewModelFactory postViewModelFactory;
+    @Inject
+    MaterialDialog.Builder materialDialog;
     private PostViewModel postViewModel;
-    public final int SELECT_FILE = 1;
     private AppCompatImageView appCompatImageView;
     private TextView tvReAddMedia;
 
@@ -59,7 +55,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-
         appCompatImageView = findViewById(R.id.aciv_file);
         tvReAddMedia = findViewById(R.id.tv_re_addd_media);
         postViewModel = ViewModelProviders.of(this, postViewModelFactory)
@@ -70,10 +65,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void observeEvents() {
-        postViewModel.openFileBooleanMutableLiveData().observe(this, check -> {
-            if (check) {
+        postViewModel.openFileBooleanMutableLiveData().observe(this, openFilePicker -> {
+            if (openFilePicker) {
                 if (isPermissionAvailable()) {
-                    openGallery();
+                    askForFileType();
                 } else {
                     askPermission();
                 }
@@ -121,7 +116,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == Constants.PERMISSIONS_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery();
+                askForFileType();
             } else {
                 askPermission();
             }
@@ -136,19 +131,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             postViewModel.openFile();
         } else if (id == R.id.btn_create_post) {
             String fileName = appCompatImageView.getTag().toString();
-            Log.d("Log13", "" + fileName);
         }
     }
 
     public boolean isPermissionAvailable() {
         return ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void openGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, SELECT_FILE);
     }
 
     public void askPermission() {
@@ -190,5 +178,34 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                         , Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void askForFileType() {
+        new MaterialDialog.Builder(PostActivity.this)
+                .title(getResources().getString(R.string.select_your_file_type))
+                .items(getResources().getStringArray(R.array.itemsArray))
+                .itemsCallback((dialog, view, which, text) -> {
+                    if (which == PHOTO) {
+                        openGalleryForImage(PHOTO);
+                    }
+                    if (which == VIDEO) {
+                        openGalleryForImage(VIDEO);
+                    }
+                })
+                .show();
+
+    }
+
+    private void openGalleryForImage(int type) {
+        Intent galleryIntent = null;
+        if (type == Constants.PHOTO) {
+            galleryIntent = new Intent(Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        }
+        if (type == VIDEO) {
+            galleryIntent = new Intent(Intent.ACTION_PICK,
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        }
+        startActivityForResult(galleryIntent, type);
     }
 }

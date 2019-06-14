@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 import androidx.room.Room;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.utils.Preferences;
 

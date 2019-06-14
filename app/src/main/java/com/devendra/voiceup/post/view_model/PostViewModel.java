@@ -1,7 +1,6 @@
 package com.devendra.voiceup.post.view_model;
 
 import android.os.Environment;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLConnection;
 
 /**
  * Created by Devendra Mehra on 6/13/2019.
@@ -63,6 +63,7 @@ public class PostViewModel extends ViewModel {
             outComeMutableLiveData.setValue(new Failure(new ImageException(e.getMessage())));
         }
     }
+
 
     public MutableLiveData<OutCome> getOutComeMutableLiveData() {
         return outComeMutableLiveData;

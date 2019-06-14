@@ -20,6 +20,8 @@ dependencies {
     annotationProcessor deps.google.roomAnnotationProcessor
     //File
     implementation deps.file.file
+    //material_dialogs
+    implementation deps.material_dialog.material_dialog
     //dagger
     implementation deps.google.dagger
     implementation deps.google.daggerAndroidSupport
