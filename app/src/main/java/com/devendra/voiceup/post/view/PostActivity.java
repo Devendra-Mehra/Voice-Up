@@ -12,19 +12,33 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.devendra.voiceup.R;
+import com.devendra.voiceup.home.view.DisplayablePost;
 import com.devendra.voiceup.post.view_model.PostViewModel;
 import com.devendra.voiceup.post.view_model.PostViewModelFactory;
 import com.devendra.voiceup.utils.Constants;
+import com.devendra.voiceup.utils.FieldType;
+import com.devendra.voiceup.utils.ViewState;
+import com.devendra.voiceup.utils.custom_exception.FieldException;
+import com.devendra.voiceup.utils.custom_exception.ImageException;
+import com.devendra.voiceup.utils.out_come.Failure;
+import com.devendra.voiceup.utils.out_come.OutCome;
+import com.devendra.voiceup.utils.out_come.Progress;
+import com.devendra.voiceup.utils.out_come.Success;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -36,9 +50,9 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     PostViewModelFactory postViewModelFactory;
     private PostViewModel postViewModel;
     public final int SELECT_FILE = 1;
+    private AppCompatImageView appCompatImageView;
+    private TextView tvReAddMedia;
 
-    AppCompatImageView appCompatImageView;
-    TextView tvReAddMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +65,13 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         postViewModel = ViewModelProviders.of(this, postViewModelFactory)
                 .get(PostViewModel.class);
 
+        observeEvents();
+
+    }
+
+    private void observeEvents() {
         postViewModel.openFileBooleanMutableLiveData().observe(this, check -> {
-            Log.d("Log13", "value" + check);
             if (check) {
-                Log.d("Log13", "isper" + isPermissionAvailable());
                 if (isPermissionAvailable()) {
                     openGallery();
                 } else {
@@ -63,7 +80,13 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-
+        postViewModel.getOutComeMutableLiveData().observe(this, outCome -> {
+            if (outCome instanceof Success) {
+                changeViewState(ViewState.SUCCESS, outCome);
+            } else if (outCome instanceof Failure) {
+                changeViewState(ViewState.ERROR, outCome);
+            }
+        });
     }
 
 
@@ -84,10 +107,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == Constants.PERMISSIONS_WRITE_EXTERNAL_STORAGE) {
-                appCompatImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                appCompatImageView.setPadding(0, 0, 0, 0);
-                appCompatImageView.setImageURI(Uri.parse(getRealPathFromURI(this, data.getData())));
-                tvReAddMedia.setVisibility(View.VISIBLE);
+                String path = getRealPathFromURI(this, data.getData());
+                postViewModel.copyFileToAnotherDirectory(path);
             }
         }
     }
@@ -113,6 +134,9 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         int id = view.getId();
         if (id == R.id.aciv_file || id == R.id.tv_re_addd_media) {
             postViewModel.openFile();
+        } else if (id == R.id.btn_create_post) {
+            String fileName = appCompatImageView.getTag().toString();
+            Log.d("Log13", "" + fileName);
         }
     }
 
@@ -146,6 +170,24 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         } finally {
             if (cursor != null) {
                 cursor.close();
+            }
+        }
+    }
+
+    private void changeViewState(ViewState viewStatus, OutCome outCome) {
+
+        if (viewStatus == ViewState.SUCCESS) {
+            Success<String> success = (Success<String>) outCome;
+            appCompatImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            appCompatImageView.setPadding(0, 0, 0, 0);
+            appCompatImageView.setImageURI(Uri.parse(success.getData()));
+            appCompatImageView.setTag(success.getData());
+            tvReAddMedia.setVisibility(View.VISIBLE);
+        } else {
+            Failure failure = (Failure) outCome;
+            if (failure.getThrowable() instanceof ImageException) {
+                Toast.makeText(this, failure.getThrowable().getMessage()
+                        , Toast.LENGTH_LONG).show();
             }
         }
     }

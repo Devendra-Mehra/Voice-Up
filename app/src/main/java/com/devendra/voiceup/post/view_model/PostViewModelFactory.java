@@ -21,6 +21,7 @@ public class PostViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new PostViewModel(postModel, new MutableLiveData<>());
+        return (T) new PostViewModel(postModel, new MutableLiveData<>()
+                , new MutableLiveData<>());
     }
 }
