@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.widget.MediaController;
 
 import androidx.room.Room;
 
@@ -49,5 +50,9 @@ public class ApplicationModule {
         return new Preferences(sharedPreferences);
     }
 
-
+    @Provides
+    @Singleton
+    MediaController provideMediaController(Application application) {
+        return new MediaController(application);
+    }
 }

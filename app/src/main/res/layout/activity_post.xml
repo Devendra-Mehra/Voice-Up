@@ -54,24 +54,26 @@
             android:id="@+id/cl_file"
             android:layout_width="match_parent"
             android:layout_height="350dp"
+            android:layout_marginTop="5dp"
+            android:onClick="onClick"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-
             app:layout_constraintTop_toBottomOf="@+id/tv_post_file">
 
             <VideoView
-                android:layout_width="wrap_content"
+                android:id="@+id/vv_post_video"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/aciv_file"
+                android:id="@+id/aciv_post_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:onClick="onClick"
                 android:padding="80dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +92,7 @@
             android:text="@string/re_add_media"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_file" />
 

@@ -38,8 +38,5 @@ public class HomeModule {
         return new HomeAdapter(new ArrayList<>(), mediaController);
     }
 
-    @Provides
-    MediaController provideMediaController(Application application) {
-        return new MediaController(application);
-    }
+
 }

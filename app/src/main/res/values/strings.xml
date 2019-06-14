@@ -13,7 +13,7 @@
     <string name="add_title">Add Title</string>
     <string name="enter_your_title_here">Enter your title here</string>
     <string name="add_your_image_or_video">Add Your image or video</string>
-    <string name="re_add_media">Re Add Media</string>
+    <string name="re_add_media">Re select Media</string>
     <string name="create_your_post">Create your post</string>
     <string name="select_your_file_type">Select your file type?</string>
     <string-array name="itemsArray">

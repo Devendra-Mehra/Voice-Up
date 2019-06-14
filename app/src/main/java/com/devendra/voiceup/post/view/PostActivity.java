@@ -9,14 +9,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
@@ -30,7 +34,7 @@ import com.devendra.voiceup.utils.ViewState;
 import com.devendra.voiceup.utils.custom_exception.ImageException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
-import com.devendra.voiceup.utils.out_come.Success;
+import com.devendra.voiceup.utils.out_come.SuccessPost;
 
 import javax.inject.Inject;
 
@@ -44,10 +48,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     @Inject
     PostViewModelFactory postViewModelFactory;
     @Inject
-    MaterialDialog.Builder materialDialog;
+    MediaController mediaController;
     private PostViewModel postViewModel;
-    private AppCompatImageView appCompatImageView;
+    private AppCompatImageView acivPostPhoto;
     private TextView tvReAddMedia;
+    private VideoView videoView;
+    private ConstraintLayout constraintLayout;
 
 
     @Override
@@ -55,8 +61,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-        appCompatImageView = findViewById(R.id.aciv_file);
+        acivPostPhoto = findViewById(R.id.aciv_post_image);
+        videoView = findViewById(R.id.vv_post_video);
         tvReAddMedia = findViewById(R.id.tv_re_addd_media);
+        constraintLayout = findViewById(R.id.cl_file);
         postViewModel = ViewModelProviders.of(this, postViewModelFactory)
                 .get(PostViewModel.class);
 
@@ -76,7 +84,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         postViewModel.getOutComeMutableLiveData().observe(this, outCome -> {
-            if (outCome instanceof Success) {
+            if (outCome instanceof SuccessPost) {
                 changeViewState(ViewState.SUCCESS, outCome);
             } else if (outCome instanceof Failure) {
                 changeViewState(ViewState.ERROR, outCome);
@@ -101,9 +109,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == Constants.PERMISSIONS_WRITE_EXTERNAL_STORAGE) {
+            if (requestCode == PHOTO || requestCode == VIDEO) {
                 String path = getRealPathFromURI(this, data.getData());
-                postViewModel.copyFileToAnotherDirectory(path);
+                Log.d("Log14", "Inside requestCode : " + requestCode);
+                Log.d("Log14", "Inside resultCode : " + resultCode);
+                Log.d("Log14", "Inside path : " + path);
+                postViewModel.copyFileToAnotherDirectory(path, requestCode);
             }
         }
     }
@@ -127,10 +138,14 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.aciv_file || id == R.id.tv_re_addd_media) {
+        if (id == R.id.tv_re_addd_media || id == R.id.cl_file) {
+
             postViewModel.openFile();
+
         } else if (id == R.id.btn_create_post) {
-            String fileName = appCompatImageView.getTag().toString();
+            //String fileName = acivPostPhoto.getTag().toString();
+            Log.d("Log14", "" + acivPostPhoto.getTag());
+            Log.d("Log14", "" + videoView.getTag());
         }
     }
 
@@ -165,12 +180,33 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private void changeViewState(ViewState viewStatus, OutCome outCome) {
 
         if (viewStatus == ViewState.SUCCESS) {
-            Success<String> success = (Success<String>) outCome;
-            appCompatImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            appCompatImageView.setPadding(0, 0, 0, 0);
-            appCompatImageView.setImageURI(Uri.parse(success.getData()));
-            appCompatImageView.setTag(success.getData());
+            SuccessPost success = (SuccessPost) outCome;
+            videoView.setTag(null);
+            acivPostPhoto.setTag(null);
+
+            if (((SuccessPost) outCome).getImageType() == PHOTO) {
+                acivPostPhoto.setVisibility(View.VISIBLE);
+                videoView.setVisibility(View.GONE);
+                acivPostPhoto.setScaleType(ImageView.ScaleType.FIT_XY);
+                acivPostPhoto.setPadding(0, 0, 0, 0);
+                acivPostPhoto.setImageURI(Uri.parse(success.getFileName()));
+                acivPostPhoto.setTag(success.getFileName());
+            } else {
+                acivPostPhoto.setVisibility(View.GONE);
+                videoView.setVisibility(View.VISIBLE);
+                MediaController mediaController;
+                mediaController = new MediaController(PostActivity.this);
+                mediaController.setAnchorView(videoView);
+                videoView.setMediaController(mediaController);
+                videoView.setVideoURI(Uri.parse(success.getFileName()));
+                videoView.start();
+                videoView.requestFocus();
+                videoView.setTag(success.getFileName());
+
+            }
             tvReAddMedia.setVisibility(View.VISIBLE);
+            constraintLayout.setOnClickListener(null);
+
         } else {
             Failure failure = (Failure) outCome;
             if (failure.getThrowable() instanceof ImageException) {

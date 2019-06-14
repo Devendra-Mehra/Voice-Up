@@ -10,13 +10,12 @@ import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.custom_exception.ImageException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
-import com.devendra.voiceup.utils.out_come.Success;
+import com.devendra.voiceup.utils.out_come.SuccessPost;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLConnection;
 
 /**
  * Created by Devendra Mehra on 6/13/2019.
@@ -45,9 +44,14 @@ public class PostViewModel extends ViewModel {
         return openFileBooleanMutableLiveData;
     }
 
-    public void copyFileToAnotherDirectory(String sourcePath) {
+    public void copyFileToAnotherDirectory(String sourcePath, int fileType) {
         File sourceFile = new File(sourcePath);
-        String imageName = System.currentTimeMillis() + ".jpg";
+        String imageName;
+        if (fileType == Constants.PHOTO) {
+            imageName = System.currentTimeMillis() + ".jpg";
+        } else {
+            imageName = System.currentTimeMillis() + ".mp4";
+        }
         File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 + Constants.FILE_LOCATION);
         if (!dir.exists()) {
@@ -57,7 +61,7 @@ public class PostViewModel extends ViewModel {
         File destinationFile = new File(destinationPath);
         try {
             FileUtils.copyFile(sourceFile, destinationFile);
-            outComeMutableLiveData.setValue(new Success<>(destinationPath));
+            outComeMutableLiveData.setValue(new SuccessPost(destinationPath, fileType));
         } catch (IOException e) {
             e.printStackTrace();
             outComeMutableLiveData.setValue(new Failure(new ImageException(e.getMessage())));
