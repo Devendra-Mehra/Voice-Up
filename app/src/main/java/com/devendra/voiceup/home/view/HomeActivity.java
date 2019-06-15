@@ -18,6 +18,7 @@ import com.devendra.voiceup.R;
 import com.devendra.voiceup.home.view_model.HomeViewModel;
 import com.devendra.voiceup.home.view_model.HomeViewModelFactory;
 import com.devendra.voiceup.post.view.PostActivity;
+import com.devendra.voiceup.post_detail.PostDetailActivity;
 import com.devendra.voiceup.registration.sign_in.view.SignInActivity;
 import com.devendra.voiceup.utils.ViewState;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
@@ -56,7 +57,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         homeViewModel = ViewModelProviders.of(this, homeViewModelFactory)
                 .get(HomeViewModel.class);
+        setObserve();
 
+        homeAdapter.setListener((postFile, postType) ->
+                startActivity(PostDetailActivity.requiredIntent(
+                        HomeActivity.this, postType, postFile)));
+    }
+
+    private void setObserve() {
         homeViewModel.getLogOutLiveData().observe(this, logout -> {
             if (logout) {
                 startActivity(SignInActivity.requiredIntent(this));
@@ -73,7 +81,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 changeViewState(ViewState.ERROR, outCome);
             }
         });
-
     }
 
     private void initView() {
@@ -115,7 +122,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void changeViewState(ViewState viewStatus, OutCome outCome) {
         switch (viewStatus) {
             case SUCCESS:
-
                 Success<List<DisplayablePost>> success = (Success<List<DisplayablePost>>) outCome;
                 homeAdapter.addPosts(success.getData());
                 recyclerViewPost.setVisibility(View.VISIBLE);
@@ -130,9 +136,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 Failure failure = (Failure) outCome;
                 if (failure.getThrowable() instanceof FieldException) {
-                   /* FieldException fieldException = (FieldException) failure.getThrowable();
-                    String errorMessage = fieldException.getMessage();
-                    FieldType fieldType = fieldException.getFieldType();*/
                     recyclerViewPost.setVisibility(View.GONE);
                     textViewNoPost.setVisibility(View.VISIBLE);
                     appCompatImageViewNoPost.setVisibility(View.VISIBLE);

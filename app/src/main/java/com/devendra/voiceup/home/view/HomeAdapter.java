@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.MediaController;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.devendra.voiceup.R;
 import com.devendra.voiceup.databinding.PostViewItemBinding;
-import com.devendra.voiceup.post.view.PostActivity;
 import com.devendra.voiceup.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -25,11 +23,20 @@ import javax.inject.Inject;
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder> {
 
     private List<DisplayablePost> displayablePosts;
-
+    private ItemListener listener;
 
     @Inject
     public HomeAdapter(List<DisplayablePost> displayablePosts) {
         this.displayablePosts = displayablePosts;
+    }
+
+    public interface ItemListener {
+        void onPostClicked(String postFile, int postType);
+    }
+
+    public void setListener(ItemListener listener) {
+        this.listener = listener;
+
     }
 
     @NonNull
@@ -58,7 +65,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         private HomeViewHolder(PostViewItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-
+            binding.clPost.setOnClickListener(v -> listener.onPostClicked(displayablePosts.get(getAdapterPosition()).getFileName(),
+                    displayablePosts.get(getAdapterPosition()).getPostType()));
         }
 
         private void bind(DisplayablePost current) {
@@ -84,12 +92,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
                 binding.vvPost.setVisibility(View.VISIBLE);
                 binding.ivCreatorImage.setVisibility(View.GONE);
                 binding.tvSomethingWentWrong.setVisibility(View.GONE);
-                MediaController mediaController = new MediaController(binding.vvPost.getContext());
+               /* MediaController mediaController = new MediaController(binding.vvPost.getContext());
                 mediaController.setAnchorView(binding.vvPost);
                 binding.vvPost.setMediaController(mediaController);
                 binding.vvPost.setVideoURI(Uri.parse(Constants.FILE_LOCATION + current.getFileName()));
                 binding.vvPost.start();
-                binding.vvPost.requestFocus();
+                binding.vvPost.requestFocus();*/
+
+
             } else {
                 binding.vvPost.setVisibility(View.GONE);
                 binding.ivCreatorImage.setVisibility(View.GONE);

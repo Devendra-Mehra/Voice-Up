@@ -79,6 +79,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         observeEvents();
 
+
+
     }
 
     private void observeEvents() {

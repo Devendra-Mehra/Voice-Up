@@ -13,6 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".post_detail.PostDetailActivity"
+            android:parentActivityName=".post.view.PostActivity" />
         <activity
             android:name=".splash_screen.view.SplashScreenActivity"
             android:theme="@style/AppThemeNoActionBar">
