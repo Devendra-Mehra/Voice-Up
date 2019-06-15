@@ -102,7 +102,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public static Intent requiredIntent(Context context) {
-        return new Intent(context, HomeActivity.class);
+        return new Intent(context, HomeActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
     }
 
     @Override
@@ -116,9 +118,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("Log15", "requestCode: " + requestCode);
-        Log.d("Log15", "resultCode : " + resultCode);
-
         if (requestCode == Constants.HOME_RESULT) {
             homeViewModel.getPost();
         }

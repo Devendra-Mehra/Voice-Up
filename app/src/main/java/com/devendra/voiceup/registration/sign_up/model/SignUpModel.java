@@ -29,13 +29,16 @@ public class SignUpModel {
     private MutableLiveData<OutCome> outComeMutableLiveData;
     private AppDatabase appDatabase;
     private Preferences preferences;
+    private Disposable disposable;
 
     @Inject
     public SignUpModel(MutableLiveData<OutCome> outComeMutableLiveData,
-                       AppDatabase appDatabase, Preferences preferences) {
+                       AppDatabase appDatabase, Preferences preferences,
+                       Disposable disposable) {
         this.outComeMutableLiveData = outComeMutableLiveData;
         this.appDatabase = appDatabase;
         this.preferences = preferences;
+        this.disposable = disposable;
     }
 
     public void validate(User user) {
@@ -87,7 +90,7 @@ public class SignUpModel {
                 .subscribe(new SingleObserver<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
@@ -112,6 +115,10 @@ public class SignUpModel {
                     }
                 });
 
+    }
+
+    public void clearSubscriptions() {
+        disposable.dispose();
     }
 
 }

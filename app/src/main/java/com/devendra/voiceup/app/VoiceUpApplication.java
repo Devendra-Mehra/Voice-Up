@@ -5,7 +5,6 @@ import android.app.Application;
 
 import com.devendra.voiceup.BuildConfig;
 import com.devendra.voiceup.app.di.DaggerApplicationComponent;
-import com.devendra.voiceup.utils.Preferences;
 import com.facebook.stetho.Stetho;
 
 import javax.inject.Inject;

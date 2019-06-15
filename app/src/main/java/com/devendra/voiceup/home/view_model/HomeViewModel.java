@@ -69,5 +69,9 @@ public class HomeViewModel extends ViewModel {
     }
 
 
-
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        homeModel.clearSubscriptions();
+    }
 }

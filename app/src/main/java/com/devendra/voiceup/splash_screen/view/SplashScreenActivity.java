@@ -1,7 +1,7 @@
 package com.devendra.voiceup.splash_screen.view;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -20,6 +20,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     @Inject
     SplashScreenViewModelFactory splashScreenViewModelFactory;
+    private SplashScreenViewModel splashScreenViewModel;
 
 
     @Override
@@ -27,18 +28,21 @@ public class SplashScreenActivity extends AppCompatActivity {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        Context context = this;
-        SplashScreenViewModel splashScreenViewModel = ViewModelProviders.of(this, splashScreenViewModelFactory)
+        splashScreenViewModel = ViewModelProviders.of(this, splashScreenViewModelFactory)
                 .get(SplashScreenViewModel.class);
+        observeEvents();
+    }
+
+
+    private void observeEvents() {
         splashScreenViewModel.getBooleanLiveData().observe(this, toShow -> {
+            Log.d("Log16", "" + toShow);
             if (toShow) {
-                startActivity(HomeActivity.requiredIntent(context));
+                startActivity(HomeActivity.requiredIntent(SplashScreenActivity.this));
             } else {
-                startActivity(SignInActivity.requiredIntent(context));
+                startActivity(SignInActivity.requiredIntent(SplashScreenActivity.this));
             }
             finish();
         });
-
-
     }
 }

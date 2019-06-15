@@ -10,7 +10,8 @@ import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.custom_exception.ImageException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
-import com.devendra.voiceup.utils.out_come.SuccessPost;
+import com.devendra.voiceup.utils.PostValidateSuccessResult;
+import com.devendra.voiceup.utils.out_come.Success;
 
 import org.apache.commons.io.FileUtils;
 
@@ -51,7 +52,7 @@ public class PostViewModel extends ViewModel {
         return openFileBooleanMutableLiveData;
     }
 
-    public void validatePost(String postTitle, Object imageName, Object videoName) {
+    public void validatePost(String postTitle, String imageName, String videoName) {
         postModel.validatePost(postTitle, imageName, videoName);
     }
 
@@ -64,15 +65,17 @@ public class PostViewModel extends ViewModel {
         }
         if (fileType == Constants.PHOTO) {
             compressImage.compressImage(sourcePath);
-            validateFileOutCome.setValue(new SuccessPost(compressImage.getCompressedImageName(), fileType));
-
+            validateFileOutCome.setValue(new Success<>(new
+                    PostValidateSuccessResult(compressImage.getCompressedImageName(), fileType)));
         } else {
             String imageName = "/" + System.currentTimeMillis() + ".mp4";
             String destinationPath = dir.getPath() + imageName;
             File videoFile = new File(destinationPath);
             try {
                 FileUtils.copyFile(sourceFile, videoFile);
-                validateFileOutCome.setValue(new SuccessPost(imageName, fileType));
+                validateFileOutCome.setValue(new Success<>(new
+                        PostValidateSuccessResult(imageName, fileType)));
+
             } catch (IOException e) {
                 e.printStackTrace();
                 validateFileOutCome.setValue(new Failure(new ImageException(e.getMessage())));
@@ -86,6 +89,12 @@ public class PostViewModel extends ViewModel {
 
     public LiveData<OutCome> getValidatePostOutCome() {
         return validatePostOutCome;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        postModel.clearSubscriptions();
     }
 }
 

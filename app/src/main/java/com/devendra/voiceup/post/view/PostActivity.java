@@ -40,7 +40,7 @@ import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
 import com.devendra.voiceup.utils.out_come.Progress;
 import com.devendra.voiceup.utils.out_come.Success;
-import com.devendra.voiceup.utils.out_come.SuccessPost;
+import com.devendra.voiceup.utils.PostValidateSuccessResult;
 
 import javax.inject.Inject;
 
@@ -94,7 +94,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         postViewModel.getValidateFileOutCome().observe(this, outCome -> {
-            if (outCome instanceof SuccessPost) {
+            if (outCome instanceof PostValidateSuccessResult) {
                 changeFileState(ViewState.SUCCESS, outCome);
             } else if (outCome instanceof Failure) {
                 changeFileState(ViewState.ERROR, outCome);
@@ -162,11 +162,11 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             postViewModel.openFile();
 
         } else if (id == R.id.btn_create_post) {
-            String imageName = null;
-            if(acivPostPhoto.getTag()!=null) imageName = acivPostPhoto.getTag().toString();
+            String imageUrl = null, videoUrl = null;
+            if (acivPostPhoto.getTag() != null) imageUrl = acivPostPhoto.getTag().toString();
+            if (videoView.getTag() != null) videoUrl = videoView.getTag().toString();
             postViewModel.validatePost(editText.getText().toString().trim(),
-                    acivPostPhoto.getTag(),
-                    videoView.getTag());
+                    imageUrl, videoUrl);
 
         }
     }
@@ -201,10 +201,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     private void changeFileState(ViewState viewStatus, OutCome outCome) {
         if (viewStatus == ViewState.SUCCESS) {
-            SuccessPost success = (SuccessPost) outCome;
+            PostValidateSuccessResult success = (PostValidateSuccessResult) outCome;
             videoView.setTag(null);
             acivPostPhoto.setTag(null);
-            if (((SuccessPost) outCome).getImageType() == PHOTO) {
+            if (((PostValidateSuccessResult) outCome).getImageType() == PHOTO) {
                 acivPostPhoto.setVisibility(View.VISIBLE);
                 videoView.setVisibility(View.GONE);
                 acivPostPhoto.setScaleType(ImageView.ScaleType.FIT_XY);

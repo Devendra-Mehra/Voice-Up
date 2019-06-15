@@ -31,18 +31,21 @@ public class PostModel {
     private AppDatabase appDatabase;
     private Preferences preferences;
     private MutableLiveData<OutCome> validatePostOutCome;
+    private Disposable disposable;
 
 
     @Inject
     public PostModel(AppDatabase appDatabase, Preferences preferences,
-                     MutableLiveData<OutCome> validatePostOutCome) {
+                     MutableLiveData<OutCome> validatePostOutCome,
+                     Disposable disposable) {
         this.appDatabase = appDatabase;
         this.preferences = preferences;
         this.validatePostOutCome = validatePostOutCome;
+        this.disposable = disposable;
     }
 
 
-    public void validatePost(String postTitle, Object imageName, Object videoName) {
+    public void validatePost(String postTitle, String imageName, String videoName) {
 
         validatePostOutCome.setValue(new Progress(true));
         if (postTitle.isEmpty()) {
@@ -89,7 +92,7 @@ public class PostModel {
                 .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
@@ -106,6 +109,8 @@ public class PostModel {
                     }
                 });
     }
-
+    public void clearSubscriptions() {
+        disposable.dispose();
+    }
 
 }

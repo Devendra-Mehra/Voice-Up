@@ -10,6 +10,7 @@ import com.devendra.voiceup.utils.Preferences;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Devendra Mehra on 6/12/2019.
@@ -23,7 +24,8 @@ public class SignInModule {
     }
 
     @Provides
-    SignInModel providesSignInModel(AppDatabase appDatabase, Preferences preferences) {
-        return new SignInModel(new MutableLiveData<>(), appDatabase, preferences);
+    SignInModel providesSignInModel(AppDatabase appDatabase, Preferences preferences,
+                                    Disposable disposable) {
+        return new SignInModel(new MutableLiveData<>(), appDatabase, preferences, disposable);
     }
 }

@@ -26,17 +26,6 @@ public class Post {
     @ColumnInfo(name = "file_name")
     private String fileName;
 
-    @Override
-    public String toString() {
-        return "Post{" +
-                "postId=" + postId +
-                ", postTitle='" + postTitle + '\'' +
-                ", userId=" + userId +
-                ", postType=" + postType +
-                ", fileName='" + fileName + '\'' +
-                '}';
-    }
-
     public int getPostId() {
         return postId;
     }

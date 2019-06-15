@@ -1,8 +1,5 @@
 package com.devendra.voiceup.home.di;
 
-import android.app.Application;
-import android.widget.MediaController;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.AppDatabase;
@@ -15,6 +12,7 @@ import java.util.ArrayList;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Devendra Mehra on 6/12/2019.
@@ -28,9 +26,10 @@ public class HomeModule {
     }
 
     @Provides
-    HomeModel provideHomeModel(Preferences preferences, AppDatabase appDatabase) {
+    HomeModel provideHomeModel(Preferences preferences, AppDatabase appDatabase,
+                               Disposable disposable) {
         return new HomeModel(preferences, new MutableLiveData<>(),
-                new MutableLiveData<>(), appDatabase);
+                new MutableLiveData<>(), appDatabase,disposable);
     }
 
     @Provides

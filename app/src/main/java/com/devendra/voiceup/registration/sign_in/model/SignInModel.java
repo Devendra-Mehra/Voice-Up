@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -34,9 +35,11 @@ public class SignInModel {
 
     @Inject
     public SignInModel(MutableLiveData<OutCome> outComeMutableLiveData,
-                       AppDatabase appDatabase, Preferences preferences) {
+                       AppDatabase appDatabase, Preferences preferences,
+                       Disposable disposable) {
         this.outComeMutableLiveData = outComeMutableLiveData;
         this.appDatabase = appDatabase;
+        this.disposable = disposable;
         this.preferences = preferences;
     }
 
@@ -58,48 +61,52 @@ public class SignInModel {
             outComeMutableLiveData.setValue(new Failure(
                     new FieldException("password cannot be empty", FieldType.PASSWORD)));
         } else {
-            appDatabase.getUserDao().getUserByEmail(emailAddress)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SingleObserver<User>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                            disposable = d;
-                        }
+            login(emailAddress, password);
+        }
 
-                        @Override
-                        public void onSuccess(User user) {
-                            if (user == null) {
-                                outComeMutableLiveData.setValue(new Progress(false));
-                                outComeMutableLiveData.setValue(new Failure(
-                                        new FieldException("User does not exist", FieldType.GENERAL)));
+    }
 
-                            } else {
-                                if (user.getUserPassword().equals(password)) {
-                                    outComeMutableLiveData.setValue(new Progress(false));
-                                    outComeMutableLiveData.setValue(new Success<>("Login successfully"));
-                                    preferences.setLoggedIn(true);
-                                    preferences.setUserId(user.getUserId());
-                                } else {
-                                    outComeMutableLiveData.setValue(new Progress(false));
-                                    outComeMutableLiveData.setValue(new Failure(
-                                            new FieldException("Wrong password", FieldType.GENERAL)));
+    private void login(String emailAddress, String password) {
+        appDatabase.getUserDao().getUserByEmail(emailAddress)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<User>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        disposable = d;
+                    }
 
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
+                    @Override
+                    public void onSuccess(User user) {
+                        if (user == null) {
                             outComeMutableLiveData.setValue(new Progress(false));
                             outComeMutableLiveData.setValue(new Failure(
-                                    new FieldException("Something went wrong", FieldType.GENERAL)));
+                                    new FieldException("User does not exist", FieldType.GENERAL)));
 
+                        } else {
+                            if (user.getUserPassword().equals(password)) {
+                                outComeMutableLiveData.setValue(new Progress(false));
+                                outComeMutableLiveData.setValue(new Success<>("Login successfully"));
+                                preferences.setLoggedIn(true);
+                                preferences.setUserId(user.getUserId());
+                            } else {
+                                outComeMutableLiveData.setValue(new Progress(false));
+                                outComeMutableLiveData.setValue(new Failure(
+                                        new FieldException("Wrong password", FieldType.GENERAL)));
 
+                            }
                         }
-                    });
+                    }
 
-        }
+                    @Override
+                    public void onError(Throwable e) {
+                        outComeMutableLiveData.setValue(new Progress(false));
+                        outComeMutableLiveData.setValue(new Failure(
+                                new FieldException("Something went wrong", FieldType.GENERAL)));
+
+
+                    }
+                });
 
     }
 

@@ -8,7 +8,6 @@ import android.widget.MediaController;
 
 import androidx.room.Room;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.Preferences;
@@ -17,6 +16,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Devendra Mehra on 5/6/2019.
@@ -56,4 +57,12 @@ public class ApplicationModule {
     MediaController provideMediaController(Application application) {
         return new MediaController(application);
     }
+
+
+    @Provides
+    @Singleton
+    Disposable provideDisposable() {
+        return new CompositeDisposable();
+    }
+
 }

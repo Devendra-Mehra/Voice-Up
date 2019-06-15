@@ -14,7 +14,7 @@ public class SplashScreenViewModel extends ViewModel {
 
     public SplashScreenViewModel(SplashScreenModel splashScreenModel) {
         booleanLiveData = splashScreenModel.getBooleanMutableLiveData();
-        splashScreenModel.whichActivityToView();
+        splashScreenModel.whichActivityToShow();
     }
 
     public LiveData<Boolean> getBooleanLiveData() {

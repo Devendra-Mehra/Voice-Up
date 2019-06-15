@@ -12,6 +12,7 @@ import com.devendra.voiceup.utils.Preferences;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Devendra Mehra on 6/13/2019.
@@ -25,8 +26,8 @@ public class PostModule {
     }
 
     @Provides
-    PostModel providePostModel(AppDatabase appDatabase, Preferences preferences) {
-        return new PostModel(appDatabase, preferences, new MutableLiveData<>());
+    PostModel providePostModel(AppDatabase appDatabase, Preferences preferences, Disposable disposable) {
+        return new PostModel(appDatabase, preferences, new MutableLiveData<>(), disposable);
     }
 
 

@@ -9,8 +9,8 @@ public class FieldException extends Exception {
 
     private FieldType fieldType;
 
-    public FieldException(String emptyFieldException, FieldType fieldType) {
-        super(emptyFieldException);
+    public FieldException(String cause, FieldType fieldType) {
+        super(cause);
         this.fieldType = fieldType;
     }
 

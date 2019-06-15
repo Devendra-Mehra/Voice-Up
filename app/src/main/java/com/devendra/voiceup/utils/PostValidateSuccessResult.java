@@ -1,13 +1,14 @@
-package com.devendra.voiceup.utils.out_come;
+package com.devendra.voiceup.utils;
 
 /**
  * Created by Devendra Mehra on 6/15/2019.
  */
-public class SuccessPost implements OutCome {
+public class PostValidateSuccessResult {
     private String fileName;
     private int imageType;
 
-    public SuccessPost(String fileName, int imageType) {
+
+    public PostValidateSuccessResult(String fileName, int imageType) {
         this.fileName = fileName;
         this.imageType = imageType;
     }
@@ -19,4 +20,5 @@ public class SuccessPost implements OutCome {
     public int getImageType() {
         return imageType;
     }
+
 }

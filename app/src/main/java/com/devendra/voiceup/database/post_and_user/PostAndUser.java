@@ -2,11 +2,11 @@ package com.devendra.voiceup.database.post_and_user;
 
 import androidx.room.ColumnInfo;
 
-import com.devendra.voiceup.database.user.User;
-
 /**
  * Created by Devendra Mehra on 6/12/2019.
  */
+
+
 public class PostAndUser {
 
     @ColumnInfo(name = "post_title")
@@ -53,13 +53,4 @@ public class PostAndUser {
         this.userName = userName;
     }
 
-    @Override
-    public String toString() {
-        return "DisplayablePost{" +
-                "postTitle='" + postTitle + '\'' +
-                ", postType=" + postType +
-                ", fileName='" + fileName + '\'' +
-                ", userName='" + userName + '\'' +
-                '}';
-    }
 }

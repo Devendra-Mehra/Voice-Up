@@ -30,7 +30,7 @@ public class SplashScreenModel {
     }
 
 
-    public void whichActivityToView() {
+    public void whichActivityToShow() {
         handler.postDelayed(() ->
                         booleanMutableLiveData
                                 .setValue(preferences.isLoggedIn()),

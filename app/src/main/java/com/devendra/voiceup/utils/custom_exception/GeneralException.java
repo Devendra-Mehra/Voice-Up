@@ -9,8 +9,8 @@ public class GeneralException extends Exception {
 
     private FieldType fieldType;
 
-    public GeneralException(String generalException, FieldType fieldType) {
-        super(generalException);
+    public GeneralException(String cause, FieldType fieldType) {
+        super(cause);
         this.fieldType = fieldType;
     }
 

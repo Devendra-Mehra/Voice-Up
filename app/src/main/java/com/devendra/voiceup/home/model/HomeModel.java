@@ -30,14 +30,16 @@ public class HomeModel {
     private MutableLiveData<Boolean> logoutMutableLiveData;
     private MutableLiveData<OutCome> outComeMutableLiveData;
     private AppDatabase appDatabase;
+    private Disposable disposable;
 
 
     @Inject
     public HomeModel(Preferences preferences,
                      MutableLiveData<Boolean> logoutMutableLiveData,
                      MutableLiveData<OutCome> outComeMutableLiveData,
-                     AppDatabase appDatabase) {
+                     AppDatabase appDatabase, Disposable disposable) {
         this.preferences = preferences;
+        this.disposable = disposable;
         this.logoutMutableLiveData = logoutMutableLiveData;
         this.outComeMutableLiveData = outComeMutableLiveData;
         this.appDatabase = appDatabase;
@@ -67,12 +69,12 @@ public class HomeModel {
                 .subscribe(new SingleObserver<List<PostAndUser>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable = d;
                     }
 
                     @Override
                     public void onSuccess(List<PostAndUser> postAndUsers) {
-                         outComeMutableLiveData.setValue(new Progress(false));
+                        outComeMutableLiveData.setValue(new Progress(false));
                         if (postAndUsers.size() > 0) {
                             outComeMutableLiveData.setValue(new Success<>(postAndUsers));
                         } else {
@@ -88,6 +90,10 @@ public class HomeModel {
                                 new FieldException(e.getMessage(), FieldType.GENERAL)));
                     }
                 });
-
     }
+
+    public void clearSubscriptions() {
+        disposable.dispose();
+    }
+
 }
