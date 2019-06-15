@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.devendra.voiceup.R;
 import com.devendra.voiceup.databinding.PostViewItemBinding;
 import com.devendra.voiceup.utils.Constants;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     }
 
     public interface ItemListener {
-        void onPostClicked(String postFile, int postType);
+        void onPostClicked(String postFile, int postType, int dominantColor);
     }
 
     public void setListener(ItemListener listener) {
@@ -66,49 +65,31 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             super(binding.getRoot());
             this.binding = binding;
             binding.clPost.setOnClickListener(v -> listener.onPostClicked(displayablePosts.get(getAdapterPosition()).getFileName(),
-                    displayablePosts.get(getAdapterPosition()).getPostType()));
+                    displayablePosts.get(getAdapterPosition()).getPostType(),
+                    displayablePosts.get(getAdapterPosition()).getDominantColor()));
         }
 
         private void bind(DisplayablePost current) {
-
             binding.tvPostTitle.setText(current.getPostTitle());
             binding.tvCreatorName.setText(current.getUserName());
-
+            Log.d("Log15", "" + current.getUserName());
+            binding.clPost.setBackgroundColor(current.getDominantColor());
             if (current.getPostType() == Constants.PHOTO) {
-                binding.vvPost.setVisibility(View.GONE);
-                binding.tvSomethingWentWrong.setVisibility(View.GONE);
-                binding.ivCreatorImage.setVisibility(View.VISIBLE);
-
-                Log.d("Log15", "" + Constants.FILE_LOCATION + current.getFileName());
-                Picasso.get()
-                        .load(Constants.FILE_LOCATION + current.getFileName())
-                        .placeholder(R.drawable.add_profile)
-                        .into(binding.ivCreatorImage);
-
                 binding.ivPostImage.setImageURI(Uri.parse(Constants.FILE_LOCATION + current.getFileName()));
-
-
+                binding.acivPlay.setVisibility(View.GONE);
+                binding.view.setVisibility(View.GONE);
             } else if (current.getPostType() == Constants.VIDEO) {
-                binding.vvPost.setVisibility(View.VISIBLE);
-                binding.ivCreatorImage.setVisibility(View.GONE);
-                binding.tvSomethingWentWrong.setVisibility(View.GONE);
-               /* MediaController mediaController = new MediaController(binding.vvPost.getContext());
-                mediaController.setAnchorView(binding.vvPost);
-                binding.vvPost.setMediaController(mediaController);
-                binding.vvPost.setVideoURI(Uri.parse(Constants.FILE_LOCATION + current.getFileName()));
-                binding.vvPost.start();
-                binding.vvPost.requestFocus();*/
-
+                binding.ivPostImage.setImageBitmap(current.getBitmapThumbnail());
+                binding.acivPlay.setVisibility(View.VISIBLE);
+                binding.view.setVisibility(View.VISIBLE);
+                binding.view.setBackgroundColor(current.getDominantColor());
 
             } else {
-                binding.vvPost.setVisibility(View.GONE);
-                binding.ivCreatorImage.setVisibility(View.GONE);
                 binding.tvSomethingWentWrong.setVisibility(View.VISIBLE);
+                binding.acivPlay.setVisibility(View.GONE);
+                binding.view.setVisibility(View.GONE);
             }
-
-
         }
-
     }
 
     public void addPosts(List<DisplayablePost> displayablePosts) {
@@ -117,5 +98,4 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         int endSize = this.displayablePosts.size();
         notifyItemRangeInserted(startSize, endSize);
     }
-
 }

@@ -1,19 +1,25 @@
-package com.devendra.voiceup.home.view;
+package com.devendra.voiceup.database;
 
-import android.graphics.Bitmap;
+import androidx.room.ColumnInfo;
+
+import com.devendra.voiceup.database.user.User;
 
 /**
- * Created by Devendra Mehra on 6/15/2019.
+ * Created by Devendra Mehra on 6/12/2019.
  */
-public class DisplayablePost {
+public class JoinResult {
 
-
+    @ColumnInfo(name = "post_title")
     private String postTitle;
+
+    @ColumnInfo(name = "post_type")
     private int postType;
+
+    @ColumnInfo(name = "file_name")
     private String fileName;
+
+    @ColumnInfo(name = "user_name")
     private String userName;
-    private int dominantColor;
-    private Bitmap bitmapThumbnail;
 
     public String getPostTitle() {
         return postTitle;
@@ -47,22 +53,6 @@ public class DisplayablePost {
         this.userName = userName;
     }
 
-    public int getDominantColor() {
-        return dominantColor;
-    }
-
-    public void setDominantColor(int dominantColor) {
-        this.dominantColor = dominantColor;
-    }
-
-    public Bitmap getBitmapThumbnail() {
-        return bitmapThumbnail;
-    }
-
-    public void setBitmapThumbnail(Bitmap bitmapThumbnail) {
-        this.bitmapThumbnail = bitmapThumbnail;
-    }
-
     @Override
     public String toString() {
         return "DisplayablePost{" +
@@ -70,8 +60,6 @@ public class DisplayablePost {
                 ", postType=" + postType +
                 ", fileName='" + fileName + '\'' +
                 ", userName='" + userName + '\'' +
-                ", cominantColor=" + dominantColor +
-                ", bitmapThumbnail=" + bitmapThumbnail +
                 '}';
     }
 }

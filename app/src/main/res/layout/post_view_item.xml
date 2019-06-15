@@ -6,36 +6,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iv_creator_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/profile_image_of_creator"
-            android:padding="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
-            android:id="@+id/tv_creator_name"
+            android:id="@+id/tv_post_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_creator_image"
-            app:layout_constraintStart_toEndOf="@+id/iv_creator_image"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Devendra Mehra" />
+            tools:text="Post name" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_post"
             android:layout_width="match_parent"
             android:layout_height="250dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_creator_image">
+            app:layout_constraintTop_toBottomOf="@+id/tv_post_title">
+
 
             <TextView
                 android:id="@+id/tv_something_went_wrong"
@@ -44,6 +36,7 @@
                 android:gravity="center"
                 android:text="@string/something_went_wrong_with_media"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -59,31 +52,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
-            <VideoView
-                android:id="@+id/vv_post"
-                android:layout_width="0dp"
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:alpha="0.5"
+                android:background="@color/black"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/aciv_play"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/aciv_play"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/play" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <TextView
-            android:id="@+id/tv_post_title"
+            android:id="@+id/tv_creator_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="16dp"
+            android:padding="10dp"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cl_post"
-            tools:text="Post name" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_post"
+            tools:text="Devendra Mehra" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,17 +22,21 @@ public class PostDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityPostDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_post_detail);
         String postFileName;
-        int postType;
+        int postType, dominantColor;
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             postFileName = null;
             postType = -1;
+            dominantColor = -1;
         } else {
             postFileName = extras.getString(Constants.FILE_NAME);
             postType = extras.getInt(Constants.TYPE);
+            dominantColor = extras.getInt(Constants.DOMINANT_COLOR);
         }
 
-
+        if (dominantColor != -1) {
+            binding.containerLayout.setBackgroundColor(dominantColor);
+        }
         if (postType == Constants.PHOTO) {
             binding.tvSomethingWentWrong.setVisibility(View.GONE);
             binding.ivPostImage.setVisibility(View.VISIBLE);
@@ -60,9 +64,10 @@ public class PostDetailActivity extends AppCompatActivity {
 
     }
 
-    public static Intent requiredIntent(Context context, int postType, String fileName) {
+    public static Intent requiredIntent(Context context, int postType, String fileName, int dominantColor) {
         return new Intent(context, PostDetailActivity.class)
                 .putExtra(Constants.TYPE, postType)
+                .putExtra(Constants.DOMINANT_COLOR, dominantColor)
                 .putExtra(Constants.FILE_NAME, fileName);
     }
 

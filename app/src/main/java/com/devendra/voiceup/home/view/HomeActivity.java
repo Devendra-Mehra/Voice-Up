@@ -3,6 +3,7 @@ package com.devendra.voiceup.home.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devendra.voiceup.R;
+import com.devendra.voiceup.database.JoinResult;
+import com.devendra.voiceup.database.post.Post;
 import com.devendra.voiceup.home.view_model.HomeViewModel;
 import com.devendra.voiceup.home.view_model.HomeViewModelFactory;
 import com.devendra.voiceup.post.view.PostActivity;
@@ -58,10 +61,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         homeViewModel = ViewModelProviders.of(this, homeViewModelFactory)
                 .get(HomeViewModel.class);
         setObserve();
-
-        homeAdapter.setListener((postFile, postType) ->
+        homeAdapter.setListener((postFile, postType, dominantColor) ->
                 startActivity(PostDetailActivity.requiredIntent(
-                        HomeActivity.this, postType, postFile)));
+                        HomeActivity.this, postType, postFile, dominantColor)));
+
+
+        homeViewModel.getPost();
     }
 
     private void setObserve() {
@@ -123,7 +128,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (viewStatus) {
             case SUCCESS:
                 Success<List<DisplayablePost>> success = (Success<List<DisplayablePost>>) outCome;
+                Log.d("Log15", "test" + success.getData());
+                recyclerViewPost.setHasFixedSize(true);
                 homeAdapter.addPosts(success.getData());
+
                 recyclerViewPost.setVisibility(View.VISIBLE);
                 textViewNoPost.setVisibility(View.GONE);
                 appCompatImageViewNoPost.setVisibility(View.GONE);

@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.AppDatabase;
-import com.devendra.voiceup.home.view.DisplayablePost;
+import com.devendra.voiceup.database.JoinResult;
 import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.utils.Preferences;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
@@ -66,17 +66,17 @@ public class HomeModel {
                 .getDisplayablePost()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<DisplayablePost>>() {
+                .subscribe(new SingleObserver<List<JoinResult>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(List<DisplayablePost> displayablePosts) {
+                    public void onSuccess(List<JoinResult> joinResults) {
                          outComeMutableLiveData.setValue(new Progress(false));
-                        if (displayablePosts.size() > 0) {
-                            outComeMutableLiveData.setValue(new Success<>(displayablePosts));
+                        if (joinResults.size() > 0) {
+                            outComeMutableLiveData.setValue(new Success<>(joinResults));
                         } else {
                             outComeMutableLiveData.setValue(new Failure(
                                     new FieldException("No Post found", FieldType.GENERAL)));
