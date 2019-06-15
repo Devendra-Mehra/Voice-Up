@@ -74,7 +74,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        homeViewModel.getPost();
     }
 
     private void initView() {

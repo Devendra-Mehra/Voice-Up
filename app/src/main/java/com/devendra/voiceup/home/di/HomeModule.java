@@ -34,8 +34,8 @@ public class HomeModule {
     }
 
     @Provides
-    HomeAdapter provideHomeAdapter(MediaController mediaController) {
-        return new HomeAdapter(new ArrayList<>(), mediaController);
+    HomeAdapter provideHomeAdapter() {
+        return new HomeAdapter(new ArrayList<>());
     }
 
 

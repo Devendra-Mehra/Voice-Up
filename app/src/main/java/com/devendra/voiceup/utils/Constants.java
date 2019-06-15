@@ -1,5 +1,7 @@
 package com.devendra.voiceup.utils;
 
+import android.os.Environment;
+
 /**
  * Created by ADMIN on 21-Mar-17.
  */
@@ -11,8 +13,8 @@ public class Constants {
     public final static int PHOTO = 0;
     public final static int VIDEO = 1;
     public static final int PERMISSIONS_WRITE_EXTERNAL_STORAGE = 1;
-    public static final String FILE_LOCATION = "/.voice_up";
-
+    public static final String FILE_LOCATION = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            + "/.voice_up";
 
 
 }

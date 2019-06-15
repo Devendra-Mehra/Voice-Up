@@ -1,7 +1,6 @@
 package com.devendra.voiceup.post.view_model;
 
-import android.os.Environment;
-
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -24,15 +23,17 @@ public class PostViewModel extends ViewModel {
 
     private PostModel postModel;
     private MutableLiveData<Boolean> openFileBooleanMutableLiveData;
-    private MutableLiveData<OutCome> outComeMutableLiveData;
+    private MutableLiveData<OutCome> validateFileOutCome;
+    private LiveData<OutCome> validatePostOutCome;
 
 
     public PostViewModel(PostModel postModel,
                          MutableLiveData<Boolean> openFileBooleanMutableLiveData,
-                         MutableLiveData<OutCome> outComeMutableLiveData) {
+                         MutableLiveData<OutCome> validateFileOutCome) {
         this.postModel = postModel;
         this.openFileBooleanMutableLiveData = openFileBooleanMutableLiveData;
-        this.outComeMutableLiveData = outComeMutableLiveData;
+        this.validateFileOutCome = validateFileOutCome;
+        validatePostOutCome = postModel.getValidatePostOutCome();
     }
 
 
@@ -44,33 +45,39 @@ public class PostViewModel extends ViewModel {
         return openFileBooleanMutableLiveData;
     }
 
+    public void validatePost(String postTitle, Object imageName, Object videoName) {
+        postModel.validatePost(postTitle, imageName, videoName);
+    }
+
     public void copyFileToAnotherDirectory(String sourcePath, int fileType) {
         File sourceFile = new File(sourcePath);
         String imageName;
         if (fileType == Constants.PHOTO) {
-            imageName = System.currentTimeMillis() + ".jpg";
+            imageName = "/" + System.currentTimeMillis() + ".jpg";
         } else {
-            imageName = System.currentTimeMillis() + ".mp4";
+            imageName = "/" + System.currentTimeMillis() + ".mp4";
         }
-        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                + Constants.FILE_LOCATION);
+        File dir = new File(Constants.FILE_LOCATION);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        String destinationPath = dir.getPath() + "/" + imageName;
+        String destinationPath = dir.getPath() + imageName;
         File destinationFile = new File(destinationPath);
         try {
             FileUtils.copyFile(sourceFile, destinationFile);
-            outComeMutableLiveData.setValue(new SuccessPost(destinationPath, fileType));
+            validateFileOutCome.setValue(new SuccessPost(imageName, fileType));
         } catch (IOException e) {
             e.printStackTrace();
-            outComeMutableLiveData.setValue(new Failure(new ImageException(e.getMessage())));
+            validateFileOutCome.setValue(new Failure(new ImageException(e.getMessage())));
         }
     }
 
+    public MutableLiveData<OutCome> getValidateFileOutCome() {
+        return validateFileOutCome;
+    }
 
-    public MutableLiveData<OutCome> getOutComeMutableLiveData() {
-        return outComeMutableLiveData;
+    public LiveData<OutCome> getValidatePostOutCome() {
+        return validatePostOutCome;
     }
 }
 

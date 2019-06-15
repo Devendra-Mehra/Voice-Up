@@ -15,12 +15,11 @@ public class DisplayablePost {
     @ColumnInfo(name = "post_type")
     private int postType;
 
-    @ColumnInfo(name = "post_file_path")
-    private String postFilePath;
+    @ColumnInfo(name = "file_name")
+    private String fileName;
 
     @ColumnInfo(name = "user_name")
     private String userName;
-
 
     public String getPostTitle() {
         return postTitle;
@@ -38,12 +37,12 @@ public class DisplayablePost {
         this.postType = postType;
     }
 
-    public String getPostFilePath() {
-        return postFilePath;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setPostFilePath(String postFilePath) {
-        this.postFilePath = postFilePath;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getUserName() {
@@ -57,9 +56,9 @@ public class DisplayablePost {
     @Override
     public String toString() {
         return "DisplayablePost{" +
-                ", postTitle='" + postTitle + '\'' +
+                "postTitle='" + postTitle + '\'' +
                 ", postType=" + postType +
-                ", postFilePath='" + postFilePath + '\'' +
+                ", fileName='" + fileName + '\'' +
                 ", userName='" + userName + '\'' +
                 '}';
     }

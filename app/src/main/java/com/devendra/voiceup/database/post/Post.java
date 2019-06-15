@@ -23,8 +23,19 @@ public class Post {
     @ColumnInfo(name = "post_type")
     private int postType;
 
-    @ColumnInfo(name = "post_file_path")
-    private String postFilePath;
+    @ColumnInfo(name = "file_name")
+    private String fileName;
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postId=" + postId +
+                ", postTitle='" + postTitle + '\'' +
+                ", userId=" + userId +
+                ", postType=" + postType +
+                ", fileName='" + fileName + '\'' +
+                '}';
+    }
 
     public int getPostId() {
         return postId;
@@ -58,22 +69,11 @@ public class Post {
         this.postType = postType;
     }
 
-    public String getPostFilePath() {
-        return postFilePath;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setPostFilePath(String postFilePath) {
-        this.postFilePath = postFilePath;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "postId=" + postId +
-                ", postTitle='" + postTitle + '\'' +
-                ", userId=" + userId +
-                ", postType=" + postType +
-                ", postFilePath='" + postFilePath + '\'' +
-                '}';
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

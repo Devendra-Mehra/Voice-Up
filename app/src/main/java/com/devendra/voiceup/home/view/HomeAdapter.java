@@ -1,6 +1,7 @@
 package com.devendra.voiceup.home.view;
 
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.devendra.voiceup.R;
 import com.devendra.voiceup.databinding.PostViewItemBinding;
+import com.devendra.voiceup.post.view.PostActivity;
 import com.devendra.voiceup.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -23,13 +25,11 @@ import javax.inject.Inject;
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder> {
 
     private List<DisplayablePost> displayablePosts;
-    private MediaController mediaController;
 
 
     @Inject
-    public HomeAdapter(List<DisplayablePost> displayablePosts, MediaController mediaController) {
+    public HomeAdapter(List<DisplayablePost> displayablePosts) {
         this.displayablePosts = displayablePosts;
-        this.mediaController = mediaController;
     }
 
     @NonNull
@@ -70,17 +70,25 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
                 binding.vvPost.setVisibility(View.GONE);
                 binding.tvSomethingWentWrong.setVisibility(View.GONE);
                 binding.ivCreatorImage.setVisibility(View.VISIBLE);
+
+                Log.d("Log15", "" + Constants.FILE_LOCATION + current.getFileName());
                 Picasso.get()
-                        .load(current.getPostFilePath())
+                        .load(Constants.FILE_LOCATION + current.getFileName())
                         .placeholder(R.drawable.add_profile)
                         .into(binding.ivCreatorImage);
+
+                binding.ivPostImage.setImageURI(Uri.parse(Constants.FILE_LOCATION + current.getFileName()));
+
+
             } else if (current.getPostType() == Constants.VIDEO) {
                 binding.vvPost.setVisibility(View.VISIBLE);
                 binding.ivCreatorImage.setVisibility(View.GONE);
                 binding.tvSomethingWentWrong.setVisibility(View.GONE);
+                MediaController mediaController = new MediaController(binding.vvPost.getContext());
                 mediaController.setAnchorView(binding.vvPost);
                 binding.vvPost.setMediaController(mediaController);
-                binding.vvPost.setVideoURI(Uri.parse(current.getPostFilePath()));
+                binding.vvPost.setVideoURI(Uri.parse(Constants.FILE_LOCATION + current.getFileName()));
+                binding.vvPost.start();
                 binding.vvPost.requestFocus();
             } else {
                 binding.vvPost.setVisibility(View.GONE);

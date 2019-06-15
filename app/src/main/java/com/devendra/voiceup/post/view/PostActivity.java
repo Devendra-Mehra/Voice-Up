@@ -9,11 +9,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -30,10 +31,15 @@ import com.devendra.voiceup.R;
 import com.devendra.voiceup.post.view_model.PostViewModel;
 import com.devendra.voiceup.post.view_model.PostViewModelFactory;
 import com.devendra.voiceup.utils.Constants;
+import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.utils.ViewState;
+import com.devendra.voiceup.utils.custom_exception.FieldException;
+import com.devendra.voiceup.utils.custom_exception.GeneralException;
 import com.devendra.voiceup.utils.custom_exception.ImageException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
+import com.devendra.voiceup.utils.out_come.Progress;
+import com.devendra.voiceup.utils.out_come.Success;
 import com.devendra.voiceup.utils.out_come.SuccessPost;
 
 import javax.inject.Inject;
@@ -52,9 +58,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private PostViewModel postViewModel;
     private AppCompatImageView acivPostPhoto;
     private TextView tvReAddMedia;
+    private ProgressBar progressBar;
     private VideoView videoView;
     private ConstraintLayout constraintLayout;
-
+    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         videoView = findViewById(R.id.vv_post_video);
         tvReAddMedia = findViewById(R.id.tv_re_addd_media);
         constraintLayout = findViewById(R.id.cl_file);
+        progressBar = findViewById(R.id.progress_bar_loading);
+        editText = findViewById(R.id.et_post_title);
         postViewModel = ViewModelProviders.of(this, postViewModelFactory)
                 .get(PostViewModel.class);
 
@@ -83,11 +92,24 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        postViewModel.getOutComeMutableLiveData().observe(this, outCome -> {
+        postViewModel.getValidateFileOutCome().observe(this, outCome -> {
             if (outCome instanceof SuccessPost) {
-                changeViewState(ViewState.SUCCESS, outCome);
+                changeFileState(ViewState.SUCCESS, outCome);
             } else if (outCome instanceof Failure) {
-                changeViewState(ViewState.ERROR, outCome);
+                changeFileState(ViewState.ERROR, outCome);
+            } else {
+                changeFileState(ViewState.LOADING, outCome);
+            }
+        });
+
+
+        postViewModel.getValidatePostOutCome().observe(this, outCome -> {
+            if (outCome instanceof Success) {
+                changePostViewState(ViewState.SUCCESS, outCome);
+            } else if (outCome instanceof Failure) {
+                changePostViewState(ViewState.ERROR, outCome);
+            } else {
+                changePostViewState(ViewState.LOADING, outCome);
             }
         });
     }
@@ -111,9 +133,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PHOTO || requestCode == VIDEO) {
                 String path = getRealPathFromURI(this, data.getData());
-                Log.d("Log14", "Inside requestCode : " + requestCode);
-                Log.d("Log14", "Inside resultCode : " + resultCode);
-                Log.d("Log14", "Inside path : " + path);
                 postViewModel.copyFileToAnotherDirectory(path, requestCode);
             }
         }
@@ -139,13 +158,13 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.tv_re_addd_media || id == R.id.cl_file) {
-
             postViewModel.openFile();
 
         } else if (id == R.id.btn_create_post) {
-            //String fileName = acivPostPhoto.getTag().toString();
-            Log.d("Log14", "" + acivPostPhoto.getTag());
-            Log.d("Log14", "" + videoView.getTag());
+            postViewModel.validatePost(editText.getText().toString().trim(),
+                    acivPostPhoto.getTag(),
+                    videoView.getTag());
+
         }
     }
 
@@ -177,28 +196,25 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void changeViewState(ViewState viewStatus, OutCome outCome) {
-
+    private void changeFileState(ViewState viewStatus, OutCome outCome) {
         if (viewStatus == ViewState.SUCCESS) {
             SuccessPost success = (SuccessPost) outCome;
             videoView.setTag(null);
             acivPostPhoto.setTag(null);
-
             if (((SuccessPost) outCome).getImageType() == PHOTO) {
                 acivPostPhoto.setVisibility(View.VISIBLE);
                 videoView.setVisibility(View.GONE);
                 acivPostPhoto.setScaleType(ImageView.ScaleType.FIT_XY);
                 acivPostPhoto.setPadding(0, 0, 0, 0);
-                acivPostPhoto.setImageURI(Uri.parse(success.getFileName()));
+                acivPostPhoto.setImageURI(Uri.parse(Constants.FILE_LOCATION + success.getFileName()));
                 acivPostPhoto.setTag(success.getFileName());
             } else {
                 acivPostPhoto.setVisibility(View.GONE);
                 videoView.setVisibility(View.VISIBLE);
-                MediaController mediaController;
-                mediaController = new MediaController(PostActivity.this);
+                MediaController mediaController = new MediaController(PostActivity.this);
                 mediaController.setAnchorView(videoView);
                 videoView.setMediaController(mediaController);
-                videoView.setVideoURI(Uri.parse(success.getFileName()));
+                videoView.setVideoURI(Uri.parse(Constants.FILE_LOCATION + success.getFileName()));
                 videoView.start();
                 videoView.requestFocus();
                 videoView.setTag(success.getFileName());
@@ -207,12 +223,16 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             tvReAddMedia.setVisibility(View.VISIBLE);
             constraintLayout.setOnClickListener(null);
 
-        } else {
+        } else if (viewStatus == ViewState.ERROR) {
             Failure failure = (Failure) outCome;
             if (failure.getThrowable() instanceof ImageException) {
                 Toast.makeText(this, failure.getThrowable().getMessage()
                         , Toast.LENGTH_LONG).show();
             }
+        } else {
+            Progress progress = (Progress) outCome;
+            progressBar.setVisibility(progress.isLoading()
+                    ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -243,5 +263,27 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         }
         startActivityForResult(galleryIntent, type);
+    }
+
+    private void changePostViewState(ViewState viewStatus, OutCome outCome) {
+        if (viewStatus == ViewState.SUCCESS) {
+            Success<String> success = (Success) outCome;
+            Toast.makeText(this, "" + success.getData(), Toast.LENGTH_LONG).show();
+            finish();
+
+        } else if (viewStatus == ViewState.ERROR) {
+            Failure failure = (Failure) outCome;
+            if (failure.getThrowable() instanceof FieldException) {
+                if (((FieldException) failure.getThrowable()).getFieldType() == FieldType.TITLE) {
+                    tvReAddMedia.setError(failure.getThrowable().getMessage());
+                }
+            } else if (failure.getThrowable() instanceof GeneralException) {
+                Toast.makeText(this, failure.getThrowable().getMessage(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Progress progress = (Progress) outCome;
+            progressBar.setVisibility(progress.isLoading()
+                    ? View.VISIBLE : View.GONE);
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.devendra.voiceup.post.di;
 
 import android.content.Context;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.post.model.PostModel;
@@ -24,6 +26,6 @@ public class PostModule {
 
     @Provides
     PostModel providePostModel(AppDatabase appDatabase, Preferences preferences) {
-        return new PostModel(appDatabase, preferences);
+        return new PostModel(appDatabase, preferences, new MutableLiveData<>());
     }
 }

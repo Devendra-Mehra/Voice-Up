@@ -20,6 +20,7 @@ public class HomeViewModel extends ViewModel {
         this.homeModel = homeModel;
         logOutLiveData = homeModel.getLogoutMutableLiveData();
         outComeLiveData = homeModel.getOutComeMutableLiveData();
+        homeModel.getPost();
     }
 
     public LiveData<Boolean> getLogOutLiveData() {
@@ -30,11 +31,6 @@ public class HomeViewModel extends ViewModel {
     public void logout() {
         homeModel.logout();
     }
-
-    public void getPost() {
-        homeModel.getPost();
-    }
-
 
     public LiveData<OutCome> getOutComeLiveData() {
         return outComeLiveData;
