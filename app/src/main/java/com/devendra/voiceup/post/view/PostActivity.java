@@ -80,7 +80,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         observeEvents();
 
 
-
     }
 
     private void observeEvents() {
@@ -270,14 +269,15 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private void changePostViewState(ViewState viewStatus, OutCome outCome) {
         if (viewStatus == ViewState.SUCCESS) {
             Success<String> success = (Success) outCome;
-            Toast.makeText(this, "" + success.getData(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, success.getData(), Toast.LENGTH_LONG).show();
+            setResult(Constants.HOME_RESULT);
             finish();
 
         } else if (viewStatus == ViewState.ERROR) {
             Failure failure = (Failure) outCome;
             if (failure.getThrowable() instanceof FieldException) {
                 if (((FieldException) failure.getThrowable()).getFieldType() == FieldType.TITLE) {
-                    tvReAddMedia.setError(failure.getThrowable().getMessage());
+                    editText.setError(failure.getThrowable().getMessage());
                 }
             } else if (failure.getThrowable() instanceof GeneralException) {
                 Toast.makeText(this, failure.getThrowable().getMessage(), Toast.LENGTH_LONG).show();

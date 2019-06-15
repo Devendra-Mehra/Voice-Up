@@ -1,7 +1,6 @@
 package com.devendra.voiceup.home.view;
 
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.devendra.voiceup.R;
 import com.devendra.voiceup.databinding.PostViewItemBinding;
 import com.devendra.voiceup.utils.Constants;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -72,10 +73,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
         private void bind(DisplayablePost current) {
             binding.tvPostTitle.setText(current.getPostTitle());
             binding.tvCreatorName.setText(current.getUserName());
-            Log.d("Log15", "" + current.getUserName());
             binding.clPost.setBackgroundColor(current.getDominantColor());
             if (current.getPostType() == Constants.PHOTO) {
-                binding.ivPostImage.setImageURI(Uri.parse(Constants.FILE_LOCATION + current.getFileName()));
+             /*   Picasso.get().load(new File(Constants.FILE_LOCATION +
+                        current.getFileName()))
+                        .into(binding.ivPostImage);*/
+                binding.ivPostImage.setImageURI(Uri.parse(Constants.FILE_LOCATION +
+                        current.getFileName()));
                 binding.acivPlay.setVisibility(View.GONE);
                 binding.view.setVisibility(View.GONE);
             } else if (current.getPostType() == Constants.VIDEO) {
@@ -93,9 +97,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
     }
 
     public void addPosts(List<DisplayablePost> displayablePosts) {
-        int startSize = this.displayablePosts.size();
+        this.displayablePosts.clear();
         this.displayablePosts.addAll(displayablePosts);
-        int endSize = this.displayablePosts.size();
-        notifyItemRangeInserted(startSize, endSize);
+        notifyDataSetChanged();
     }
 }

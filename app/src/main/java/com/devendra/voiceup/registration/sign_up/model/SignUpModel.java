@@ -76,6 +76,7 @@ public class SignUpModel {
                 .map(integer -> {
                     if (integer <= 0) {
                         preferences.setUserId(appDatabase.getUserDao().insertUser(user));
+                        preferences.setLoggedIn(true);
                         return true;
                     } else {
                         return false;

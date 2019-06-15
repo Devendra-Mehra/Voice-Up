@@ -69,6 +69,8 @@ public class HomeViewModel extends ViewModel {
             displayablePost.setUserName("By: " + joinResult.getUserName());
             displayablePost.setFileName(joinResult.getFileName());
             if (Constants.PHOTO == joinResult.getPostType()) {
+                Log.d("Log15", "" + Constants.FILE_LOCATION +
+                        joinResult.getFileName());
                 displayablePost.setDominantColor(
                         getDominantColor(
                                 BitmapFactory.decodeFile(
@@ -101,4 +103,6 @@ public class HomeViewModel extends ViewModel {
         return ThumbnailUtils.createVideoThumbnail(filePath,
                 MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
     }
+
+
 }

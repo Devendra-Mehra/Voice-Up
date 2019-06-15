@@ -1,6 +1,5 @@
 package com.devendra.voiceup.registration.sign_in.model;
 
-import android.util.Log;
 import android.util.Patterns;
 
 import androidx.lifecycle.MutableLiveData;

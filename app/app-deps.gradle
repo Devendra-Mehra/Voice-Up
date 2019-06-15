@@ -9,6 +9,7 @@ dependencies {
     //stetho
     implementation deps.facebook.stetho
     implementation deps.facebook.stetho_okhttp3
+
     //reactive
     implementation deps.reactive.rxjava
     implementation deps.reactive.rxAndroid

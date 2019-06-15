@@ -1,30 +1,25 @@
 package com.devendra.voiceup.post.model;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.database.post.Post;
+import com.devendra.voiceup.utils.CompressImage;
 import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.utils.Preferences;
-import com.devendra.voiceup.utils.ViewState;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
 import com.devendra.voiceup.utils.custom_exception.GeneralException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
 import com.devendra.voiceup.utils.out_come.Progress;
 import com.devendra.voiceup.utils.out_come.Success;
-import com.devendra.voiceup.utils.out_come.SuccessPost;
 
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -71,10 +66,6 @@ public class PostModel {
             }
             insertPost(postTitle, fileName, fileType);
         }
-
-        Log.d("Log15", "postTitle " + postTitle);
-        Log.d("Log15", "imageName " + imageName);
-        Log.d("Log15", "videoName " + videoName);
     }
 
 

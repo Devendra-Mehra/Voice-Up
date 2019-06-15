@@ -1,7 +1,5 @@
 package com.devendra.voiceup.home.model;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.AppDatabase;
@@ -88,7 +86,6 @@ public class HomeModel {
                         outComeMutableLiveData.setValue(new Progress(false));
                         outComeMutableLiveData.setValue(new Failure(
                                 new FieldException(e.getMessage(), FieldType.GENERAL)));
-                        Log.d("Log10", "" + e.getMessage());
                     }
                 });
 

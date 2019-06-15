@@ -1,5 +1,6 @@
 package com.devendra.voiceup.home.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,13 +17,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devendra.voiceup.R;
-import com.devendra.voiceup.database.JoinResult;
-import com.devendra.voiceup.database.post.Post;
 import com.devendra.voiceup.home.view_model.HomeViewModel;
 import com.devendra.voiceup.home.view_model.HomeViewModelFactory;
 import com.devendra.voiceup.post.view.PostActivity;
 import com.devendra.voiceup.post_detail.PostDetailActivity;
 import com.devendra.voiceup.registration.sign_in.view.SignInActivity;
+import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.ViewState;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
 import com.devendra.voiceup.utils.out_come.Failure;
@@ -35,6 +35,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+
+import static com.devendra.voiceup.utils.Constants.PHOTO;
+import static com.devendra.voiceup.utils.Constants.VIDEO;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -90,10 +93,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         recyclerViewPost = findViewById(R.id.recycler_view_post);
+        recyclerViewPost.setHasFixedSize(true);
+        recyclerViewPost.setItemViewCacheSize(20);
+        recyclerViewPost.setDrawingCacheEnabled(true);
+        recyclerViewPost.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         textViewNoPost = findViewById(R.id.tv_no_post);
         appCompatImageViewNoPost = findViewById(R.id.aciv_no_post);
         progressBarLoading = findViewById(R.id.progress_bar_loading);
         recyclerViewPost.setAdapter(homeAdapter);
+
     }
 
     public static Intent requiredIntent(Context context) {
@@ -104,8 +112,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.fab_add_post) {
-            startActivity(PostActivity.requiredIntent(this));
+            startActivityForResult(PostActivity.requiredIntent(this), Constants.HOME_RESULT);
+        }
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("Log15", "requestCode: " + requestCode);
+        Log.d("Log15", "resultCode : " + resultCode);
+
+        if (requestCode == Constants.HOME_RESULT) {
+            homeViewModel.getPost();
         }
     }
 
@@ -129,9 +147,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case SUCCESS:
                 Success<List<DisplayablePost>> success = (Success<List<DisplayablePost>>) outCome;
                 Log.d("Log15", "test" + success.getData());
-                recyclerViewPost.setHasFixedSize(true);
                 homeAdapter.addPosts(success.getData());
-
                 recyclerViewPost.setVisibility(View.VISIBLE);
                 textViewNoPost.setVisibility(View.GONE);
                 appCompatImageViewNoPost.setVisibility(View.GONE);
@@ -149,8 +165,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     appCompatImageViewNoPost.setVisibility(View.VISIBLE);
 
                 }
-
-
         }
     }
+
+
 }
