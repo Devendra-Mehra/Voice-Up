@@ -10,6 +10,7 @@ import androidx.room.Room;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devendra.voiceup.database.AppDatabase;
+import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.Preferences;
 
 import javax.inject.Singleton;
@@ -33,7 +34,7 @@ public class ApplicationModule {
     @Singleton
     AppDatabase appDatabase(Context context) {
         return Room.databaseBuilder(context, AppDatabase.class,
-                "Voice up").build();
+                Constants.DATABASE_NAME).build();
     }
 
 

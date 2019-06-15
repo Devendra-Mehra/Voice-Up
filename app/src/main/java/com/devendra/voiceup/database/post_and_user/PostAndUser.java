@@ -1,4 +1,4 @@
-package com.devendra.voiceup.database;
+package com.devendra.voiceup.database.post_and_user;
 
 import androidx.room.ColumnInfo;
 
@@ -7,7 +7,7 @@ import com.devendra.voiceup.database.user.User;
 /**
  * Created by Devendra Mehra on 6/12/2019.
  */
-public class JoinResult {
+public class PostAndUser {
 
     @ColumnInfo(name = "post_title")
     private String postTitle;

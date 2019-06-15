@@ -32,4 +32,9 @@ public class SignInViewModel extends ViewModel {
         return outComeLiveData;
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        signInModel.clearSubscriptions();
+    }
 }

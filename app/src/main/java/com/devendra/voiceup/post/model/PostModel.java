@@ -52,7 +52,7 @@ public class PostModel {
         } else if (imageName == null && videoName == null) {
             validatePostOutCome.setValue(new Progress(false));
             validatePostOutCome.setValue(new Failure(new
-                    GeneralException("You have not provide video or photo to the post",
+                    GeneralException("You have not provided video or photo to the post",
                     FieldType.GENERAL)));
         } else {
             String fileName;

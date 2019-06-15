@@ -23,7 +23,13 @@ public class SplashScreenModule {
     }
 
     @Provides
-    SplashScreenModel providesSplashScreenModel(Preferences preferences) {
-        return new SplashScreenModel(preferences, new Handler(), new MutableLiveData<>());
+    SplashScreenModel providesSplashScreenModel(Preferences preferences,
+                                                Handler handler) {
+        return new SplashScreenModel(preferences, handler, new MutableLiveData<>());
+    }
+
+    @Provides
+    Handler providesHandler() {
+        return  new Handler();
     }
 }

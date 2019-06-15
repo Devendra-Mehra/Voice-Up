@@ -117,6 +117,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                                     Toast.LENGTH_LONG).show();
                             break;
                     }
+                } else {
+                    Toast.makeText(this, failure.getThrowable().getMessage(),
+                            Toast.LENGTH_LONG).show();
                 }
         }
     }

@@ -162,6 +162,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             postViewModel.openFile();
 
         } else if (id == R.id.btn_create_post) {
+            String imageName = null;
+            if(acivPostPhoto.getTag()!=null) imageName = acivPostPhoto.getTag().toString();
             postViewModel.validatePost(editText.getText().toString().trim(),
                     acivPostPhoto.getTag(),
                     videoView.getTag());

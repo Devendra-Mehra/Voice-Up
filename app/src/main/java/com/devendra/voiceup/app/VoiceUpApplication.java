@@ -21,9 +21,6 @@ public class VoiceUpApplication extends Application implements HasActivityInject
     @Inject
     DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
 
-    @Inject
-    Preferences preferences;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -33,7 +30,6 @@ public class VoiceUpApplication extends Application implements HasActivityInject
                 .build()
                 .inject(this);
 
-        preferences.loadPreferences();
 
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);

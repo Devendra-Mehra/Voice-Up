@@ -93,10 +93,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         recyclerViewPost = findViewById(R.id.recycler_view_post);
-        recyclerViewPost.setHasFixedSize(true);
-        recyclerViewPost.setItemViewCacheSize(20);
-        recyclerViewPost.setDrawingCacheEnabled(true);
-        recyclerViewPost.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
         textViewNoPost = findViewById(R.id.tv_no_post);
         appCompatImageViewNoPost = findViewById(R.id.aciv_no_post);
         progressBarLoading = findViewById(R.id.progress_bar_loading);

@@ -9,7 +9,6 @@ dependencies {
     //stetho
     implementation deps.facebook.stetho
     implementation deps.facebook.stetho_okhttp3
-
     //reactive
     implementation deps.reactive.rxjava
     implementation deps.reactive.rxAndroid
@@ -20,9 +19,9 @@ dependencies {
     implementation deps.google.roomRxjava2
     annotationProcessor deps.google.roomAnnotationProcessor
     //File
-    implementation deps.file.file
+    implementation deps.apache.file
     //material_dialogs
-    implementation deps.material_dialog.material_dialog
+    implementation deps.afollestad.materialDialog
     //dagger
     implementation deps.google.dagger
     implementation deps.google.daggerAndroidSupport

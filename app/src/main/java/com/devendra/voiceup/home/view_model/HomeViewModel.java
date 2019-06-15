@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.devendra.voiceup.database.JoinResult;
+import com.devendra.voiceup.database.post_and_user.PostAndUser;
 import com.devendra.voiceup.home.model.HomeModel;
 import com.devendra.voiceup.home.view.DisplayablePost;
 import com.devendra.voiceup.utils.Constants;
@@ -36,7 +36,7 @@ public class HomeViewModel extends ViewModel {
         outComeLiveData = Transformations.map(homeModel.getOutComeMutableLiveData(), input -> {
             if (input instanceof Success) {
                 return new Success<>(
-                        createDisplayablePost(((Success<List<JoinResult>>) input)
+                        createDisplayablePost(((Success<List<PostAndUser>>) input)
                                 .getData()));
             }
             return input;
@@ -60,49 +60,14 @@ public class HomeViewModel extends ViewModel {
         return outComeLiveData;
     }
 
-    private List<DisplayablePost> createDisplayablePost(List<JoinResult> joinResults) {
+    private List<DisplayablePost> createDisplayablePost(List<PostAndUser> postAndUsers) {
         List<DisplayablePost> displayablePosts = new ArrayList<>();
-        for (JoinResult joinResult : joinResults) {
-            DisplayablePost displayablePost = new DisplayablePost();
-            displayablePost.setPostTitle(joinResult.getPostTitle());
-            displayablePost.setPostType(joinResult.getPostType());
-            displayablePost.setUserName("By: " + joinResult.getUserName());
-            displayablePost.setFileName(joinResult.getFileName());
-            if (Constants.PHOTO == joinResult.getPostType()) {
-                Log.d("Log15", "" + Constants.FILE_LOCATION +
-                        joinResult.getFileName());
-                displayablePost.setDominantColor(
-                        getDominantColor(
-                                BitmapFactory.decodeFile(
-                                        Constants.FILE_LOCATION +
-                                                joinResult.getFileName())
-                        ));
-            } else {
-                displayablePost.setBitmapThumbnail(getBitmap(Constants.FILE_LOCATION
-                        + joinResult.getFileName()));
-                displayablePost.setDominantColor(
-                        getDominantColor(
-                                getBitmap(Constants.FILE_LOCATION
-                                        + joinResult.getFileName())));
-            }
-            displayablePosts.add(displayablePost);
+        for (PostAndUser postAndUser : postAndUsers) {
+            displayablePosts.add(new DisplayablePost(postAndUser));
         }
         return displayablePosts;
     }
 
-    private int getDominantColor(Bitmap bitmap) {
-        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap,
-                1, 1, true);
-        final int color = newBitmap.getPixel(0, 0);
-        newBitmap.recycle();
-        return color;
-    }
-
-
-    private Bitmap getBitmap(String filePath) {
-        return ThumbnailUtils.createVideoThumbnail(filePath,
-                MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-    }
 
 
 }

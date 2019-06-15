@@ -29,6 +29,7 @@ public class SignInModel {
     private MutableLiveData<OutCome> outComeMutableLiveData;
     private AppDatabase appDatabase;
     private Preferences preferences;
+    private Disposable disposable;
 
 
     @Inject
@@ -63,7 +64,7 @@ public class SignInModel {
                     .subscribe(new SingleObserver<User>() {
                         @Override
                         public void onSubscribe(Disposable d) {
-
+                            disposable = d;
                         }
 
                         @Override
@@ -71,7 +72,7 @@ public class SignInModel {
                             if (user == null) {
                                 outComeMutableLiveData.setValue(new Progress(false));
                                 outComeMutableLiveData.setValue(new Failure(
-                                        new FieldException("No user found for this record", FieldType.GENERAL)));
+                                        new FieldException("User does not exist", FieldType.GENERAL)));
 
                             } else {
                                 if (user.getUserPassword().equals(password)) {
@@ -92,12 +93,18 @@ public class SignInModel {
                         public void onError(Throwable e) {
                             outComeMutableLiveData.setValue(new Progress(false));
                             outComeMutableLiveData.setValue(new Failure(
-                                    new FieldException("No user found for this record", FieldType.GENERAL)));
+                                    new FieldException("Something went wrong", FieldType.GENERAL)));
+
 
                         }
                     });
+
         }
 
+    }
+
+    public void clearSubscriptions() {
+        disposable.dispose();
     }
 
     public MutableLiveData<OutCome> getOutComeMutableLiveData() {

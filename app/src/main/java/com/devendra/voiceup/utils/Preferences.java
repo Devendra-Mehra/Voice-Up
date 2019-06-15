@@ -15,6 +15,8 @@ public class Preferences {
     @Inject
     public Preferences(SharedPreferences preferences) {
         this.preferences = preferences;
+        loggedIn = preferences.getBoolean(Constants.LOGGED_IN, false);
+        userId = preferences.getLong(Constants.USER_ID, -1);
     }
 
     public boolean isLoggedIn() {
@@ -37,12 +39,6 @@ public class Preferences {
 
     public void clearPrefs() {
         preferences.edit().clear().apply();
-        loadPreferences();
     }
 
-
-    public void loadPreferences() {
-        loggedIn = preferences.getBoolean(Constants.LOGGED_IN, false);
-        userId = preferences.getLong(Constants.USER_ID, -1);
-    }
 }
