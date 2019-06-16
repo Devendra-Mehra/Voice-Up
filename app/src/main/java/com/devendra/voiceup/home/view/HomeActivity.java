@@ -3,6 +3,7 @@ package com.devendra.voiceup.home.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 
 import com.devendra.voiceup.R;
 import com.devendra.voiceup.databinding.ActivityHomeBinding;
@@ -50,6 +52,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         homeViewModel = ViewModelProviders.of(this, homeViewModelFactory)
                 .get(HomeViewModel.class);
+        recyclerViewSetUp();
         setObserve();
         homeAdapter.setListener((postFile, postType, dominantColor) ->
                 startActivity(PostDetailActivity.requiredIntent(
@@ -57,6 +60,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
 
         homeViewModel.getPost();
+    }
+
+    private void recyclerViewSetUp() {
+        binding.recyclerViewPost.setAdapter(homeAdapter);
+        binding.recyclerViewPost.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
     }
 
     private void setObserve() {
@@ -129,6 +138,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void success(OutCome outCome) {
         Success<List<DisplayablePost>> success = (Success<List<DisplayablePost>>) outCome;
+        Log.d("Log16", "success " + success.getData());
         homeAdapter.addPosts(success.getData());
         binding.recyclerViewPost.setVisibility(View.VISIBLE);
         binding.tvNoPost.setVisibility(View.GONE);

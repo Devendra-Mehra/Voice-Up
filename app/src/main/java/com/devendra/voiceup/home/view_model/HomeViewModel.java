@@ -45,9 +45,10 @@ public class HomeViewModel extends ViewModel {
     private List<DisplayablePost> createDisplayablePost(List<PostAndUser> postAndUsers) {
         List<DisplayablePost> displayablePosts = new ArrayList<>();
         for (PostAndUser postAndUser : postAndUsers) {
-            displayablePosts.add(new DisplayablePost(postAndUser));
+            displayablePosts.add(ConverToDisplayablePost.getDisplayablePost(postAndUser));
         }
-        return displayablePosts;
+
+          return displayablePosts;
     }
 
     public LiveData<Boolean> getLogOutLiveData() {

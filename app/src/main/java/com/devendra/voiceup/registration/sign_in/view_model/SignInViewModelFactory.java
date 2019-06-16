@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.devendra.voiceup.registration.sign_in.model.SignInModel;
-import com.devendra.voiceup.registration.sign_up.model.SignUpModel;
-import com.devendra.voiceup.registration.sign_up.view_model.SignUpViewModel;
 
 
 /**

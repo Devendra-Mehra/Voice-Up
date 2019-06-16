@@ -1,8 +1,5 @@
 package com.devendra.voiceup.post_detail;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +7,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.MediaController;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.devendra.voiceup.R;
 import com.devendra.voiceup.databinding.ActivityPostDetailBinding;

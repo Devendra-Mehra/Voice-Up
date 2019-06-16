@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel;
 import com.devendra.voiceup.post.model.PostModel;
 import com.devendra.voiceup.utils.CompressImage;
 import com.devendra.voiceup.utils.Constants;
+import com.devendra.voiceup.utils.PostValidateSuccessResult;
 import com.devendra.voiceup.utils.custom_exception.ImageException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
-import com.devendra.voiceup.utils.PostValidateSuccessResult;
 import com.devendra.voiceup.utils.out_come.Success;
 
 import org.apache.commons.io.FileUtils;

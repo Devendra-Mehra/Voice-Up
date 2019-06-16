@@ -21,6 +21,16 @@ public class PostAndUser {
     @ColumnInfo(name = "user_name")
     private String userName;
 
+    @Override
+    public String toString() {
+        return "PostAndUser{" +
+                "postTitle='" + postTitle + '\'' +
+                ", postType=" + postType +
+                ", fileName='" + fileName + '\'' +
+                ", userName='" + userName + '\'' +
+                '}';
+    }
+
     public String getPostTitle() {
         return postTitle;
     }
