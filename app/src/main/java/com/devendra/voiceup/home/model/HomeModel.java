@@ -74,22 +74,30 @@ public class HomeModel {
 
                     @Override
                     public void onSuccess(List<PostAndUser> postAndUsers) {
-                        outComeMutableLiveData.setValue(new Progress(false));
-                        if (postAndUsers.size() > 0) {
-                            outComeMutableLiveData.setValue(new Success<>(postAndUsers));
-                        } else {
-                            outComeMutableLiveData.setValue(new Failure(
-                                    new FieldException("No Post found", FieldType.GENERAL)));
-                        }
+                        success(postAndUsers);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        outComeMutableLiveData.setValue(new Progress(false));
-                        outComeMutableLiveData.setValue(new Failure(
-                                new FieldException(e.getMessage(), FieldType.GENERAL)));
+                        error(e.getMessage());
                     }
                 });
+    }
+
+    private void success(List<PostAndUser> postAndUsers) {
+        outComeMutableLiveData.setValue(new Progress(false));
+        if (postAndUsers.size() > 0) {
+            outComeMutableLiveData.setValue(new Success<>(postAndUsers));
+        } else {
+            outComeMutableLiveData.setValue(new Failure(
+                    new FieldException("No Post found", FieldType.GENERAL)));
+        }
+    }
+
+    private void error(String error) {
+        outComeMutableLiveData.setValue(new Progress(false));
+        outComeMutableLiveData.setValue(new Failure(
+                new FieldException(error, FieldType.GENERAL)));
     }
 
     public void clearSubscriptions() {

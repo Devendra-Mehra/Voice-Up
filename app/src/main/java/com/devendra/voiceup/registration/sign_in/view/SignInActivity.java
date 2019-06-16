@@ -3,10 +3,16 @@ package com.devendra.voiceup.registration.sign_in.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -34,7 +40,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Inject
     SignInViewModelFactory signInViewModelFactory;
     private SignInViewModel signInViewModel;
-
     private ActivitySignInBinding binding;
 
 
@@ -45,10 +50,35 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in);
         signInViewModel = ViewModelProviders.of(this, signInViewModelFactory)
                 .get(SignInViewModel.class);
-        observeEvents();
+        setSpannable();
+        setObserve();
     }
 
-    private void observeEvents() {
+    private void setSpannable() {
+        String textData = "Don't have and account click here to signUp";
+        Spannable spannable = new SpannableString(textData);
+
+        int startPosition = 23;
+        int endPosition = 34;
+        ClickableSpan onClickSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                startActivity(SignUpActivity.requiredIntent(textView.getContext()));
+
+            }
+        };
+        spannable.setSpan(onClickSpan, startPosition, endPosition,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this,
+                R.color.colorPrimaryDark)),
+                startPosition, endPosition,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        binding.tvSignUp.setText(spannable);
+    }
+
+    private void setObserve() {
         signInViewModel.getOutComeMutableLiveData().observe(this, outCome -> {
             if (outCome instanceof Progress) {
                 changeViewState(ViewState.LOADING, outCome);
@@ -64,15 +94,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.tv_sign_up) {
-            startActivity(SignUpActivity.requiredIntent(this));
-        } else if (id == R.id.fab_login) {
-            binding.etEmail.setError(null);
-            binding.etPassword.setError(null);
-            String emailAddress = binding.etEmail.getText().toString().trim();
-            String password = binding.etPassword.getText().toString().trim();
-            signInViewModel.validate(emailAddress, password);
+        if (id == R.id.fab_login) {
+            extractData();
         }
+    }
+
+    private void extractData() {
+        binding.etEmail.setError(null);
+        binding.etPassword.setError(null);
+        signInViewModel.validate(binding.etEmail.getText().toString().trim()
+                , binding.etPassword.getText().toString().trim());
     }
 
 

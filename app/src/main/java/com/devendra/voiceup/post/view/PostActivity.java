@@ -11,36 +11,31 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.devendra.voiceup.R;
+import com.devendra.voiceup.databinding.ActivityPostBinding;
 import com.devendra.voiceup.post.view_model.PostViewModel;
 import com.devendra.voiceup.post.view_model.PostViewModelFactory;
 import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.FieldType;
+import com.devendra.voiceup.utils.PostValidateSuccessResult;
 import com.devendra.voiceup.utils.ViewState;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
 import com.devendra.voiceup.utils.custom_exception.GeneralException;
-import com.devendra.voiceup.utils.custom_exception.ImageException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
 import com.devendra.voiceup.utils.out_come.Progress;
 import com.devendra.voiceup.utils.out_come.Success;
-import com.devendra.voiceup.utils.PostValidateSuccessResult;
 
 import javax.inject.Inject;
 
@@ -56,33 +51,21 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     @Inject
     MediaController mediaController;
     private PostViewModel postViewModel;
-    private AppCompatImageView acivPostPhoto;
-    private TextView tvReAddMedia;
-    private ProgressBar progressBar;
-    private VideoView videoView;
-    private ConstraintLayout constraintLayout;
-    private EditText editText;
+    private ActivityPostBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post);
-        acivPostPhoto = findViewById(R.id.aciv_post_image);
-        videoView = findViewById(R.id.vv_post_video);
-        tvReAddMedia = findViewById(R.id.tv_re_addd_media);
-        constraintLayout = findViewById(R.id.cl_file);
-        progressBar = findViewById(R.id.progress_bar_loading);
-        editText = findViewById(R.id.et_post_title);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_post);
+
         postViewModel = ViewModelProviders.of(this, postViewModelFactory)
                 .get(PostViewModel.class);
 
-        observeEvents();
-
-
+        setObserve();
     }
 
-    private void observeEvents() {
+    private void setObserve() {
         postViewModel.openFileBooleanMutableLiveData().observe(this, openFilePicker -> {
             if (openFilePicker) {
                 if (isPermissionAvailable()) {
@@ -158,17 +141,24 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.tv_re_addd_media || id == R.id.cl_file) {
+        if (id == R.id.tv_re_add_media || id == R.id.cl_add_file) {
             postViewModel.openFile();
 
         } else if (id == R.id.btn_create_post) {
-            String imageUrl = null, videoUrl = null;
-            if (acivPostPhoto.getTag() != null) imageUrl = acivPostPhoto.getTag().toString();
-            if (videoView.getTag() != null) videoUrl = videoView.getTag().toString();
-            postViewModel.validatePost(editText.getText().toString().trim(),
-                    imageUrl, videoUrl);
-
+            extractData();
         }
+    }
+
+    private void extractData() {
+        String imageUrl = null, videoUrl = null;
+        if (binding.appCompatImageViewPost.getTag() != null)
+            imageUrl = binding.appCompatImageViewPost.getTag().toString();
+        if (binding.videoViewPost.getTag() != null)
+            videoUrl = binding.videoViewPost.getTag().toString();
+        postViewModel.validatePost(binding.etPostTitle.getText().toString().trim(),
+                imageUrl, videoUrl);
+
+
     }
 
     public boolean isPermissionAvailable() {
@@ -196,46 +186,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             if (cursor != null) {
                 cursor.close();
             }
-        }
-    }
-
-    private void changeFileState(ViewState viewStatus, OutCome outCome) {
-        if (viewStatus == ViewState.SUCCESS) {
-            PostValidateSuccessResult success = (PostValidateSuccessResult) outCome;
-            videoView.setTag(null);
-            acivPostPhoto.setTag(null);
-            if (((PostValidateSuccessResult) outCome).getImageType() == PHOTO) {
-                acivPostPhoto.setVisibility(View.VISIBLE);
-                videoView.setVisibility(View.GONE);
-                acivPostPhoto.setScaleType(ImageView.ScaleType.FIT_XY);
-                acivPostPhoto.setPadding(0, 0, 0, 0);
-                acivPostPhoto.setImageURI(Uri.parse(Constants.FILE_LOCATION + success.getFileName()));
-                acivPostPhoto.setTag(success.getFileName());
-            } else {
-                acivPostPhoto.setVisibility(View.GONE);
-                videoView.setVisibility(View.VISIBLE);
-                MediaController mediaController = new MediaController(PostActivity.this);
-                mediaController.setAnchorView(videoView);
-                videoView.setMediaController(mediaController);
-                videoView.setVideoURI(Uri.parse(Constants.FILE_LOCATION + success.getFileName()));
-                videoView.start();
-                videoView.requestFocus();
-                videoView.setTag(success.getFileName());
-
-            }
-            tvReAddMedia.setVisibility(View.VISIBLE);
-            constraintLayout.setOnClickListener(null);
-
-        } else if (viewStatus == ViewState.ERROR) {
-            Failure failure = (Failure) outCome;
-            if (failure.getThrowable() instanceof ImageException) {
-                Toast.makeText(this, failure.getThrowable().getMessage()
-                        , Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Progress progress = (Progress) outCome;
-            progressBar.setVisibility(progress.isLoading()
-                    ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -268,26 +218,87 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(galleryIntent, type);
     }
 
+    private void changeFileState(ViewState viewStatus, OutCome outCome) {
+        if (viewStatus == ViewState.SUCCESS) {
+            successFileState(outCome);
+        } else if (viewStatus == ViewState.ERROR) {
+            failureFileState(outCome);
+        } else {
+            progressFileState(outCome);
+        }
+    }
+
+    private void successFileState(OutCome outCome) {
+        PostValidateSuccessResult success = (PostValidateSuccessResult) outCome;
+        binding.videoViewPost.setTag(null);
+        binding.appCompatImageViewPost.setTag(null);
+        if (((PostValidateSuccessResult) outCome).getImageType() == PHOTO) {
+            binding.appCompatImageViewPost.setVisibility(View.VISIBLE);
+            binding.videoViewPost.setVisibility(View.GONE);
+            binding.appCompatImageViewPost.setScaleType(ImageView.ScaleType.FIT_XY);
+            binding.appCompatImageViewPost.setPadding(0, 0, 0, 0);
+            binding.appCompatImageViewPost.setImageURI(Uri.parse(Constants.FILE_LOCATION + success.getFileName()));
+            binding.appCompatImageViewPost.setTag(success.getFileName());
+        } else {
+            binding.appCompatImageViewPost.setVisibility(View.GONE);
+            binding.videoViewPost.setVisibility(View.VISIBLE);
+            MediaController mediaController = new MediaController(PostActivity.this);
+            mediaController.setAnchorView(binding.videoViewPost);
+            binding.videoViewPost.setMediaController(mediaController);
+            binding.videoViewPost.setVideoURI(Uri.parse(Constants.FILE_LOCATION + success.getFileName()));
+            binding.videoViewPost.requestFocus();
+            binding.videoViewPost.setTag(success.getFileName());
+
+        }
+        binding.tvReAddMedia.setVisibility(View.VISIBLE);
+        binding.clAddFile.setOnClickListener(null);
+    }
+
+    private void progressFileState(OutCome outCome) {
+        Progress progress = (Progress) outCome;
+        binding.progressBarLoading.setVisibility(progress.isLoading()
+                ? View.VISIBLE : View.GONE);
+    }
+
+    private void failureFileState(OutCome outCome) {
+        Failure failure = (Failure) outCome;
+        Toast.makeText(this, failure.getThrowable().getMessage()
+                , Toast.LENGTH_LONG).show();
+
+    }
+
+
     private void changePostViewState(ViewState viewStatus, OutCome outCome) {
         if (viewStatus == ViewState.SUCCESS) {
-            Success<String> success = (Success) outCome;
-            Toast.makeText(this, success.getData(), Toast.LENGTH_LONG).show();
-            setResult(Constants.HOME_RESULT);
-            finish();
-
-        } else if (viewStatus == ViewState.ERROR) {
-            Failure failure = (Failure) outCome;
-            if (failure.getThrowable() instanceof FieldException) {
-                if (((FieldException) failure.getThrowable()).getFieldType() == FieldType.TITLE) {
-                    editText.setError(failure.getThrowable().getMessage());
-                }
-            } else if (failure.getThrowable() instanceof GeneralException) {
-                Toast.makeText(this, failure.getThrowable().getMessage(), Toast.LENGTH_LONG).show();
-            }
+            successPostViewState(outCome);
+        } else if (viewStatus == ViewState.LOADING) {
+            progressPostViewState(outCome);
         } else {
-            Progress progress = (Progress) outCome;
-            progressBar.setVisibility(progress.isLoading()
-                    ? View.VISIBLE : View.GONE);
+            failurePostViewState(outCome);
+        }
+    }
+
+    private void successPostViewState(OutCome outCome) {
+        Success<String> success = (Success) outCome;
+        Toast.makeText(this, success.getData(), Toast.LENGTH_LONG).show();
+        setResult(Constants.HOME_RESULT);
+        finish();
+    }
+
+    private void progressPostViewState(OutCome outCome) {
+        Progress progress = (Progress) outCome;
+        binding.progressBarLoading.setVisibility(progress.isLoading()
+                ? View.VISIBLE : View.GONE);
+    }
+
+    private void failurePostViewState(OutCome outCome) {
+        Failure failure = (Failure) outCome;
+        if (failure.getThrowable() instanceof FieldException) {
+            if (((FieldException) failure.getThrowable()).getFieldType() == FieldType.TITLE) {
+                binding.etPostTitle.setError(failure.getThrowable().getMessage());
+            }
+        } else if (failure.getThrowable() instanceof GeneralException) {
+            Toast.makeText(this, failure.getThrowable().getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }

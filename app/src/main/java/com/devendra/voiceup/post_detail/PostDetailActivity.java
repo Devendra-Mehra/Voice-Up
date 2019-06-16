@@ -17,13 +17,15 @@ import com.devendra.voiceup.utils.Constants;
 
 public class PostDetailActivity extends AppCompatActivity {
 
+    private ActivityPostDetailBinding binding;
+    private String postFileName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityPostDetailBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_post_detail);
-        String postFileName;
-        int postType, dominantColor;
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_post_detail);
         Bundle extras = getIntent().getExtras();
+        int dominantColor, postType;
         if (extras == null) {
             postFileName = null;
             postType = -1;
@@ -38,30 +40,39 @@ public class PostDetailActivity extends AppCompatActivity {
             binding.containerLayout.setBackgroundColor(dominantColor);
         }
         if (postType == Constants.PHOTO) {
-            binding.tvSomethingWentWrong.setVisibility(View.GONE);
-            binding.ivPostImage.setVisibility(View.VISIBLE);
-            binding.vvPostVideo.setVisibility(View.GONE);
-            binding.ivPostImage.setImageURI(Uri.parse(Constants.FILE_LOCATION + postFileName));
-
+            setPhoto();
         } else if (postType == Constants.VIDEO) {
-            binding.tvSomethingWentWrong.setVisibility(View.GONE);
-            binding.ivPostImage.setVisibility(View.GONE);
-            binding.vvPostVideo.setVisibility(View.VISIBLE);
-
-            MediaController mediaController = new MediaController(this);
-            mediaController.setAnchorView(binding.vvPostVideo);
-            binding.vvPostVideo.setMediaController(mediaController);
-            binding.vvPostVideo.setVideoURI(Uri.parse(Constants.FILE_LOCATION + postFileName));
-            binding.vvPostVideo.start();
-            binding.vvPostVideo.requestFocus();
-
+            setVideo();
         } else {
-
-            binding.tvSomethingWentWrong.setVisibility(View.VISIBLE);
-            binding.vvPostVideo.setVisibility(View.GONE);
-            binding.ivPostImage.setVisibility(View.GONE);
+            setError();
         }
+    }
 
+
+    private void setPhoto() {
+        binding.tvSomethingWentWrong.setVisibility(View.GONE);
+        binding.ivPostImage.setVisibility(View.VISIBLE);
+        binding.vvPostVideo.setVisibility(View.GONE);
+        binding.ivPostImage.setImageURI(Uri.parse(Constants.FILE_LOCATION + postFileName));
+
+    }
+
+    private void setVideo() {
+        binding.tvSomethingWentWrong.setVisibility(View.GONE);
+        binding.ivPostImage.setVisibility(View.GONE);
+        binding.vvPostVideo.setVisibility(View.VISIBLE);
+        MediaController mediaController = new MediaController(this);
+        mediaController.setAnchorView(binding.vvPostVideo);
+        binding.vvPostVideo.setMediaController(mediaController);
+        binding.vvPostVideo.setVideoURI(Uri.parse(Constants.FILE_LOCATION + postFileName));
+        binding.vvPostVideo.start();
+        binding.vvPostVideo.requestFocus();
+    }
+
+    private void setError() {
+        binding.tvSomethingWentWrong.setVisibility(View.VISIBLE);
+        binding.vvPostVideo.setVisibility(View.GONE);
+        binding.ivPostImage.setVisibility(View.GONE);
     }
 
     public static Intent requiredIntent(Context context, int postType, String fileName, int dominantColor) {

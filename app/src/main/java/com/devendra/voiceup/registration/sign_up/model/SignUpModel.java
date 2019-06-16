@@ -95,25 +95,35 @@ public class SignUpModel {
 
                     @Override
                     public void onSuccess(Boolean isSuccessful) {
-                        if (isSuccessful) {
-                            outComeMutableLiveData.setValue(new Progress(false));
-                            outComeMutableLiveData.setValue(new Success<>("User created successfully"));
-
-                        } else {
-                            outComeMutableLiveData.setValue(new Progress(false));
-                            outComeMutableLiveData.setValue(new Failure(
-                                    new FieldException("Username already exists", FieldType.USERNAME)));
-                        }
+                        success(isSuccessful);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        outComeMutableLiveData.setValue(new Progress(false));
-                        outComeMutableLiveData.setValue(new Failure(
-                                new FieldException(e.getMessage(), FieldType.GENERAL)));
-
+                        error(e.getMessage());
                     }
                 });
+
+    }
+
+
+    private void success(boolean isSuccessful) {
+        if (isSuccessful) {
+            outComeMutableLiveData.setValue(new Progress(false));
+            outComeMutableLiveData.setValue(new Success<>("User created successfully"));
+
+        } else {
+            outComeMutableLiveData.setValue(new Progress(false));
+            outComeMutableLiveData.setValue(new Failure(
+                    new FieldException("Username already exists", FieldType.USERNAME)));
+        }
+    }
+
+    private void error(String error) {
+        outComeMutableLiveData.setValue(new Progress(false));
+        outComeMutableLiveData.setValue(new Failure(
+                new FieldException(error, FieldType.GENERAL)));
+
 
     }
 

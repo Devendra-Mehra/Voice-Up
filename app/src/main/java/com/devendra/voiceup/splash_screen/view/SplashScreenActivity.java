@@ -1,7 +1,6 @@
 package com.devendra.voiceup.splash_screen.view;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -30,19 +29,26 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         splashScreenViewModel = ViewModelProviders.of(this, splashScreenViewModelFactory)
                 .get(SplashScreenViewModel.class);
-        observeEvents();
+        setObserve();
     }
 
 
-    private void observeEvents() {
+    private void setObserve() {
         splashScreenViewModel.getBooleanLiveData().observe(this, toShow -> {
-            Log.d("Log16", "" + toShow);
             if (toShow) {
-                startActivity(HomeActivity.requiredIntent(SplashScreenActivity.this));
+                startHomeActivity();
             } else {
-                startActivity(SignInActivity.requiredIntent(SplashScreenActivity.this));
+                startSignInActivity();
             }
             finish();
         });
+    }
+
+    private void startHomeActivity() {
+        startActivity(HomeActivity.requiredIntent(SplashScreenActivity.this));
+    }
+
+    private void startSignInActivity() {
+        startActivity(SignInActivity.requiredIntent(SplashScreenActivity.this));
     }
 }

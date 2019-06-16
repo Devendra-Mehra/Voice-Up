@@ -1,6 +1,5 @@
 package com.devendra.voiceup.home.view;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,11 +74,10 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.HomeViewHolder
             binding.tvCreatorName.setText(current.getUserName());
             binding.clPost.setBackgroundColor(current.getDominantColor());
             if (current.getPostType() == Constants.PHOTO) {
-             /*   Picasso.get().load(new File(Constants.FILE_LOCATION +
+                Picasso.get().load(new File(Constants.FILE_LOCATION +
                         current.getFileName()))
-                        .into(binding.ivPostImage);*/
-                binding.ivPostImage.setImageURI(Uri.parse(Constants.FILE_LOCATION +
-                        current.getFileName()));
+                        .error(R.mipmap.ic_launcher)
+                        .into(binding.ivPostImage);
                 binding.acivPlay.setVisibility(View.GONE);
                 binding.view.setVisibility(View.GONE);
             } else if (current.getPostType() == Constants.VIDEO) {

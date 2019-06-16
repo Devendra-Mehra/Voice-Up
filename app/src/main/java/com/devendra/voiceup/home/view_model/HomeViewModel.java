@@ -1,11 +1,5 @@
 package com.devendra.voiceup.home.view_model;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
@@ -13,7 +7,6 @@ import androidx.lifecycle.ViewModel;
 import com.devendra.voiceup.database.post_and_user.PostAndUser;
 import com.devendra.voiceup.home.model.HomeModel;
 import com.devendra.voiceup.home.view.DisplayablePost;
-import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.out_come.OutCome;
 import com.devendra.voiceup.utils.out_come.Success;
 
@@ -33,6 +26,12 @@ public class HomeViewModel extends ViewModel {
     public HomeViewModel(HomeModel homeModel) {
         this.homeModel = homeModel;
         logOutLiveData = homeModel.getLogoutMutableLiveData();
+        transformation();
+
+    }
+
+
+    private void transformation() {
         outComeLiveData = Transformations.map(homeModel.getOutComeMutableLiveData(), input -> {
             if (input instanceof Success) {
                 return new Success<>(
@@ -41,7 +40,14 @@ public class HomeViewModel extends ViewModel {
             }
             return input;
         });
+    }
 
+    private List<DisplayablePost> createDisplayablePost(List<PostAndUser> postAndUsers) {
+        List<DisplayablePost> displayablePosts = new ArrayList<>();
+        for (PostAndUser postAndUser : postAndUsers) {
+            displayablePosts.add(new DisplayablePost(postAndUser));
+        }
+        return displayablePosts;
     }
 
     public LiveData<Boolean> getLogOutLiveData() {
@@ -58,14 +64,6 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<OutCome> getOutComeLiveData() {
         return outComeLiveData;
-    }
-
-    private List<DisplayablePost> createDisplayablePost(List<PostAndUser> postAndUsers) {
-        List<DisplayablePost> displayablePosts = new ArrayList<>();
-        for (PostAndUser postAndUser : postAndUsers) {
-            displayablePosts.add(new DisplayablePost(postAndUser));
-        }
-        return displayablePosts;
     }
 
 

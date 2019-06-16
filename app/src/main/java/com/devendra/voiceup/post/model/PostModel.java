@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.devendra.voiceup.database.AppDatabase;
 import com.devendra.voiceup.database.post.Post;
-import com.devendra.voiceup.utils.CompressImage;
 import com.devendra.voiceup.utils.Constants;
 import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.utils.Preferences;
@@ -62,10 +61,10 @@ public class PostModel {
             int fileType;
             if (imageName != null) {
                 fileType = Constants.PHOTO;
-                fileName = imageName.toString();
+                fileName = imageName;
             } else {
                 fileType = Constants.VIDEO;
-                fileName = videoName.toString();
+                fileName = videoName;
             }
             insertPost(postTitle, fileName, fileType);
         }
@@ -97,18 +96,29 @@ public class PostModel {
 
                     @Override
                     public void onComplete() {
-                        validatePostOutCome.setValue(new Progress(false));
-                        validatePostOutCome.setValue(new Success<>("Post inserted successfully"));
+                        complete();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        validatePostOutCome.setValue(new Progress(false));
-                        validatePostOutCome.setValue(new Failure(new GeneralException(e.getMessage(),
-                                FieldType.GENERAL)));
+                        error(e.getMessage());
                     }
                 });
     }
+
+
+    private void complete() {
+        validatePostOutCome.setValue(new Progress(false));
+        validatePostOutCome.setValue(new Success<>("Post inserted successfully"));
+
+    }
+
+    private void error(String error) {
+        validatePostOutCome.setValue(new Progress(false));
+        validatePostOutCome.setValue(new Failure(new GeneralException(error,
+                FieldType.GENERAL)));
+    }
+
     public void clearSubscriptions() {
         disposable.dispose();
     }

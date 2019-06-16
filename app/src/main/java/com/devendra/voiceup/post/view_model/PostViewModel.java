@@ -57,29 +57,38 @@ public class PostViewModel extends ViewModel {
     }
 
 
-    public void copyFileToAnotherDirectory(String sourcePath, int fileType) {
-        File sourceFile = new File(sourcePath);
+    public void copyFileToAnotherDirectory(String filePath, int fileType) {
+        if (fileType == Constants.PHOTO) {
+            copyPhoto(filePath, fileType);
+        } else {
+            copyVideo(filePath, fileType);
+        }
+    }
+
+    private void copyPhoto(String path, int fileType) {
+        compressImage.compressImage(path);
+        validateFileOutCome.setValue(new Success<>(new
+                PostValidateSuccessResult(compressImage.getCompressedImageName(), fileType)));
+
+    }
+
+    private void copyVideo(String path, int fileType) {
+        File sourceFile = new File(path);
         File dir = new File(Constants.FILE_LOCATION);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        if (fileType == Constants.PHOTO) {
-            compressImage.compressImage(sourcePath);
+        String imageName = "/" + System.currentTimeMillis() + ".mp4";
+        String destinationPath = dir.getPath() + imageName;
+        File videoFile = new File(destinationPath);
+        try {
+            FileUtils.copyFile(sourceFile, videoFile);
             validateFileOutCome.setValue(new Success<>(new
-                    PostValidateSuccessResult(compressImage.getCompressedImageName(), fileType)));
-        } else {
-            String imageName = "/" + System.currentTimeMillis() + ".mp4";
-            String destinationPath = dir.getPath() + imageName;
-            File videoFile = new File(destinationPath);
-            try {
-                FileUtils.copyFile(sourceFile, videoFile);
-                validateFileOutCome.setValue(new Success<>(new
-                        PostValidateSuccessResult(imageName, fileType)));
+                    PostValidateSuccessResult(imageName, fileType)));
 
-            } catch (IOException e) {
-                e.printStackTrace();
-                validateFileOutCome.setValue(new Failure(new ImageException(e.getMessage())));
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            validateFileOutCome.setValue(new Failure(new ImageException(e.getMessage())));
         }
     }
 

@@ -9,6 +9,7 @@ import com.devendra.voiceup.database.user.User;
 import com.devendra.voiceup.utils.FieldType;
 import com.devendra.voiceup.utils.Preferences;
 import com.devendra.voiceup.utils.custom_exception.FieldException;
+import com.devendra.voiceup.utils.custom_exception.GeneralException;
 import com.devendra.voiceup.utils.out_come.Failure;
 import com.devendra.voiceup.utils.out_come.OutCome;
 import com.devendra.voiceup.utils.out_come.Progress;
@@ -18,7 +19,6 @@ import javax.inject.Inject;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -78,43 +78,50 @@ public class SignInModel {
 
                     @Override
                     public void onSuccess(User user) {
-                        if (user == null) {
-                            outComeMutableLiveData.setValue(new Progress(false));
-                            outComeMutableLiveData.setValue(new Failure(
-                                    new FieldException("User does not exist", FieldType.GENERAL)));
-
-                        } else {
-                            if (user.getUserPassword().equals(password)) {
-                                outComeMutableLiveData.setValue(new Progress(false));
-                                outComeMutableLiveData.setValue(new Success<>("Login successfully"));
-                                preferences.setLoggedIn(true);
-                                preferences.setUserId(user.getUserId());
-                            } else {
-                                outComeMutableLiveData.setValue(new Progress(false));
-                                outComeMutableLiveData.setValue(new Failure(
-                                        new FieldException("Wrong password", FieldType.GENERAL)));
-
-                            }
-                        }
+                        success(user, password);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        outComeMutableLiveData.setValue(new Progress(false));
-                        outComeMutableLiveData.setValue(new Failure(
-                                new FieldException("Something went wrong", FieldType.GENERAL)));
-
-
+                        error(e.getMessage());
                     }
                 });
 
     }
 
-    public void clearSubscriptions() {
-        disposable.dispose();
+    private void success(User user, String password) {
+        if (user == null) {
+            outComeMutableLiveData.setValue(new Progress(false));
+            outComeMutableLiveData.setValue(new Failure(
+                    new FieldException("User does not exist", FieldType.GENERAL)));
+
+        } else {
+            if (user.getUserPassword().equals(password)) {
+                outComeMutableLiveData.setValue(new Progress(false));
+                outComeMutableLiveData.setValue(new Success<>("Login successfully"));
+                preferences.setLoggedIn(true);
+                preferences.setUserId(user.getUserId());
+            } else {
+                outComeMutableLiveData.setValue(new Progress(false));
+                outComeMutableLiveData.setValue(new Failure(
+                        new FieldException("Wrong password", FieldType.GENERAL)));
+
+            }
+        }
+    }
+
+    private void error(String error) {
+        outComeMutableLiveData.setValue(new Progress(false));
+        outComeMutableLiveData.setValue(new Failure(
+                new GeneralException("Something went wrong " + error, FieldType.GENERAL)));
+
     }
 
     public MutableLiveData<OutCome> getOutComeMutableLiveData() {
         return outComeMutableLiveData;
+    }
+
+    public void clearSubscriptions() {
+        disposable.dispose();
     }
 }

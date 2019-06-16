@@ -43,11 +43,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         signUpViewModel = ViewModelProviders.of(this, signUpViewModelFactory)
                 .get(SignUpViewModel.class);
-        observeEvents();
+        setObserve();
 
     }
 
-    private void observeEvents() {
+    private void setObserve() {
 
         signUpViewModel.getOutComeMutableLiveData().observe(this, outCome -> {
             if (outCome instanceof Progress) {
@@ -69,7 +69,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 progress(outCome);
                 break;
             default:
-
                 failure(outCome);
         }
     }
@@ -82,16 +81,20 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.fab_sign_up) {
-            binding.etUserName.setError(null);
-            binding.etEmail.setError(null);
-            binding.etPassword.setError(null);
-            String userName = binding.etUserName.getText().toString().trim();
-            String email = binding.etEmail.getText().toString().trim();
-            String password = binding.etPassword.getText().toString().trim();
-            signUpViewModel.validate(userName, email, password);
+            extractData();
         } else if (id == R.id.aciv_back) {
             finish();
         }
+    }
+
+    private void extractData() {
+        binding.etUserName.setError(null);
+        binding.etEmail.setError(null);
+        binding.etPassword.setError(null);
+        signUpViewModel.validate(binding.etUserName.getText().toString().trim(),
+                binding.etEmail.getText().toString().trim(),
+                binding.etPassword.getText().toString().trim());
+
     }
 
     private void success(OutCome outCome) {

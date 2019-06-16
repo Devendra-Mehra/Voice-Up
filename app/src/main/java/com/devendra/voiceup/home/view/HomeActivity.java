@@ -1,22 +1,18 @@
 package com.devendra.voiceup.home.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.devendra.voiceup.R;
+import com.devendra.voiceup.databinding.ActivityHomeBinding;
 import com.devendra.voiceup.home.view_model.HomeViewModel;
 import com.devendra.voiceup.home.view_model.HomeViewModelFactory;
 import com.devendra.voiceup.post.view.PostActivity;
@@ -36,31 +32,22 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 
-import static com.devendra.voiceup.utils.Constants.PHOTO;
-import static com.devendra.voiceup.utils.Constants.VIDEO;
-
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
-
-
-    @Inject
-    HomeViewModelFactory homeViewModelFactory;
-    private HomeViewModel homeViewModel;
 
     @Inject
     HomeAdapter homeAdapter;
-
-    private RecyclerView recyclerViewPost;
-    private TextView textViewNoPost;
-    private ProgressBar progressBarLoading;
-    private AppCompatImageView appCompatImageViewNoPost;
+    @Inject
+    HomeViewModelFactory homeViewModelFactory;
+    private HomeViewModel homeViewModel;
+    private ActivityHomeBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        initView();
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+
         homeViewModel = ViewModelProviders.of(this, homeViewModelFactory)
                 .get(HomeViewModel.class);
         setObserve();
@@ -91,20 +78,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void initView() {
-        recyclerViewPost = findViewById(R.id.recycler_view_post);
-
-        textViewNoPost = findViewById(R.id.tv_no_post);
-        appCompatImageViewNoPost = findViewById(R.id.aciv_no_post);
-        progressBarLoading = findViewById(R.id.progress_bar_loading);
-        recyclerViewPost.setAdapter(homeAdapter);
-
-    }
-
     public static Intent requiredIntent(Context context) {
         return new Intent(context, HomeActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
     }
 
     @Override
@@ -141,28 +117,36 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void changeViewState(ViewState viewStatus, OutCome outCome) {
         switch (viewStatus) {
             case SUCCESS:
-                Success<List<DisplayablePost>> success = (Success<List<DisplayablePost>>) outCome;
-                Log.d("Log15", "test" + success.getData());
-                homeAdapter.addPosts(success.getData());
-                recyclerViewPost.setVisibility(View.VISIBLE);
-                textViewNoPost.setVisibility(View.GONE);
-                appCompatImageViewNoPost.setVisibility(View.GONE);
+                success(outCome);
                 break;
             case LOADING:
-                Progress progress = (Progress) outCome;
-                progressBarLoading.setVisibility(progress.isLoading()
-                        ? View.VISIBLE : View.GONE);
+                progress(outCome);
                 break;
             default:
-                Failure failure = (Failure) outCome;
-                if (failure.getThrowable() instanceof FieldException) {
-                    recyclerViewPost.setVisibility(View.GONE);
-                    textViewNoPost.setVisibility(View.VISIBLE);
-                    appCompatImageViewNoPost.setVisibility(View.VISIBLE);
-
-                }
+                failure(outCome);
         }
     }
 
+    private void success(OutCome outCome) {
+        Success<List<DisplayablePost>> success = (Success<List<DisplayablePost>>) outCome;
+        homeAdapter.addPosts(success.getData());
+        binding.recyclerViewPost.setVisibility(View.VISIBLE);
+        binding.tvNoPost.setVisibility(View.GONE);
+        binding.acivNoPost.setVisibility(View.GONE);
+    }
 
+    private void progress(OutCome outCome) {
+        Progress progress = (Progress) outCome;
+        binding.progressBarLoading.setVisibility(progress.isLoading()
+                ? View.VISIBLE : View.GONE);
+    }
+
+    private void failure(OutCome outCome) {
+        Failure failure = (Failure) outCome;
+        if (failure.getThrowable() instanceof FieldException) {
+            binding.recyclerViewPost.setVisibility(View.GONE);
+            binding.tvNoPost.setVisibility(View.VISIBLE);
+            binding.acivNoPost.setVisibility(View.VISIBLE);
+        }
+    }
 }
