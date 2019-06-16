@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
@@ -55,11 +56,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setSpannable() {
-        String textData = "Don't have and account click here to signUp";
+        String textData = "Don't have an account click here to signUp";
         Spannable spannable = new SpannableString(textData);
 
-        int startPosition = 23;
-        int endPosition = 34;
+        int startPosition = 22;
+        int endPosition = 33;
         ClickableSpan onClickSpan = new ClickableSpan() {
             @Override
             public void onClick(View textView) {
@@ -71,11 +72,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this,
-                R.color.colorPrimaryDark)),
+                R.color.black)),
                 startPosition, endPosition,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         binding.tvSignUp.setText(spannable);
+        binding.tvSignUp.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void setObserve() {

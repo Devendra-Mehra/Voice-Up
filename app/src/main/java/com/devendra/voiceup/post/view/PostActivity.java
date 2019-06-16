@@ -77,7 +77,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         postViewModel.getValidateFileOutCome().observe(this, outCome -> {
-            if (outCome instanceof PostValidateSuccessResult) {
+            if (outCome instanceof Success) {
                 changeFileState(ViewState.SUCCESS, outCome);
             } else if (outCome instanceof Failure) {
                 changeFileState(ViewState.ERROR, outCome);
@@ -229,25 +229,25 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void successFileState(OutCome outCome) {
-        PostValidateSuccessResult success = (PostValidateSuccessResult) outCome;
+        Success<PostValidateSuccessResult> success = (Success<PostValidateSuccessResult>) outCome;
         binding.videoViewPost.setTag(null);
         binding.appCompatImageViewPost.setTag(null);
-        if (((PostValidateSuccessResult) outCome).getImageType() == PHOTO) {
+        if (((Success<PostValidateSuccessResult>) outCome).getData().getImageType() == PHOTO) {
             binding.appCompatImageViewPost.setVisibility(View.VISIBLE);
             binding.videoViewPost.setVisibility(View.GONE);
             binding.appCompatImageViewPost.setScaleType(ImageView.ScaleType.FIT_XY);
             binding.appCompatImageViewPost.setPadding(0, 0, 0, 0);
-            binding.appCompatImageViewPost.setImageURI(Uri.parse(Constants.FILE_LOCATION + success.getFileName()));
-            binding.appCompatImageViewPost.setTag(success.getFileName());
+            binding.appCompatImageViewPost.setImageURI(Uri.parse(Constants.FILE_LOCATION + success.getData().getFileName()));
+            binding.appCompatImageViewPost.setTag(success.getData().getFileName());
         } else {
             binding.appCompatImageViewPost.setVisibility(View.GONE);
             binding.videoViewPost.setVisibility(View.VISIBLE);
             MediaController mediaController = new MediaController(PostActivity.this);
             mediaController.setAnchorView(binding.videoViewPost);
             binding.videoViewPost.setMediaController(mediaController);
-            binding.videoViewPost.setVideoURI(Uri.parse(Constants.FILE_LOCATION + success.getFileName()));
+            binding.videoViewPost.setVideoURI(Uri.parse(Constants.FILE_LOCATION + success.getData().getFileName()));
             binding.videoViewPost.requestFocus();
-            binding.videoViewPost.setTag(success.getFileName());
+            binding.videoViewPost.setTag(success.getData().getFileName());
 
         }
         binding.tvReAddMedia.setVisibility(View.VISIBLE);
